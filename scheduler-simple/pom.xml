@@ -62,36 +62,6 @@
 	      <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>backport-util-concurrent</groupId>
-          <artifactId>backport-util-concurrent</artifactId>
-	      <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.geronimo.modules</groupId>
-          <artifactId>geronimo-kernel</artifactId>
-	      <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.geronimo.components</groupId>
-          <artifactId>geronimo-transaction</artifactId>
-	      <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.geronimo.components</groupId>
-          <artifactId>geronimo-connector</artifactId>
-	      <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
-	      <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-ejb_2.1_spec</artifactId>
-	      <scope>test</scope>
-        </dependency>
-        <dependency>
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
         </dependency>

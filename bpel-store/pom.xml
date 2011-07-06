@@ -75,11 +75,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.geronimo.components</groupId>
-      <artifactId>geronimo-transaction</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.soa.bpel</groupId>
       <artifactId>riftsaw-dao-jpa-hibernate</artifactId>
       <scope>test</scope>
