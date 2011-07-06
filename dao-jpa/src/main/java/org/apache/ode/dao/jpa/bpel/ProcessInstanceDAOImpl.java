@@ -35,6 +35,7 @@ import org.apache.ode.dao.bpel.ProcessInstanceDAO;
 import org.apache.ode.dao.bpel.ScopeDAO;
 import org.apache.ode.dao.bpel.ScopeStateEnum;
 import org.apache.ode.dao.bpel.XmlDataDAO;
+import org.hibernate.annotations.ForeignKey;
 import org.w3c.dom.Element;
 
 import javax.persistence.Basic;
@@ -109,8 +110,10 @@ public class ProcessInstanceDAOImpl extends BpelDAO implements ProcessInstanceDA
     private Date _dateCreated = new Date();
     
     @OneToOne(fetch=FetchType.LAZY,cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}) @JoinColumn(name="ROOT_SCOPE_ID")
+    @ForeignKey(name="none")
     private ScopeDAOImpl _rootScope;
     @OneToMany(targetEntity=ScopeDAOImpl.class,mappedBy="_processInstance",fetch=FetchType.LAZY,cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ForeignKey(name="none")
     private Collection<ScopeDAO> _scopes = new ArrayList<ScopeDAO>();
     @OneToMany(targetEntity=ActivityRecoveryDAOImpl.class,mappedBy="_instance",fetch=FetchType.LAZY,cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Collection<ActivityRecoveryDAO> _recoveries = new ArrayList<ActivityRecoveryDAO>();

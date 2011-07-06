@@ -26,6 +26,7 @@ import org.apache.ode.bpel.common.CorrelationKey;
 import org.apache.ode.dao.bpel.*;
 import org.apache.ode.utils.DOMUtils;
 import org.apache.ode.utils.uuid.UUID;
+import org.hibernate.annotations.ForeignKey;
 import org.w3c.dom.Element;
 
 import javax.persistence.Basic;
@@ -112,8 +113,10 @@ public class MessageExchangeDAOImpl extends BpelDAO implements MessageExchangeDA
     @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST}) @JoinColumn(name="PROCESS_ID")
     private ProcessDAOImpl _process;
     @OneToOne(fetch=FetchType.LAZY,cascade={CascadeType.ALL}) @JoinColumn(name="REQUEST_MESSAGE_ID")
+    @ForeignKey(name="none")
     private MessageDAOImpl _request;
     @OneToOne(fetch=FetchType.LAZY,cascade={CascadeType.ALL}) @JoinColumn(name="RESPONSE_MESSAGE_ID")
+    @ForeignKey(name="none")
     private MessageDAOImpl _response;
 
     @ManyToOne(fetch= FetchType.LAZY,cascade={CascadeType.PERSIST}) @JoinColumn(name="CORR_ID")

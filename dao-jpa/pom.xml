@@ -47,7 +47,11 @@
       <groupId>org.jboss.soa.bpel</groupId>
       <artifactId>riftsaw-bpel-dao</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-annotations</artifactId>
+      <version>3.4.0.GA</version>
+    </dependency>
     <dependency>
        <groupId>org.jboss.bpm</groupId>
        <artifactId>activity-monitor-model</artifactId>

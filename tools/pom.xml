@@ -42,6 +42,7 @@
         <dependency>
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
+            <version>${ant.version}</version>
         </dependency>
 
     </dependencies>
