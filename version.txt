@@ -1,0 +1,4 @@
+#This is the file for keep track of Apache ODE version/tag that we based on.
+Tag:        http://svn.apache.org/repos/asf/ode/branch/ode-1.3.5.x/
+Revision:   1059558
+Note: we've added jpa refactoring work on this.

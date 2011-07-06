@@ -1,0 +1,28 @@
+<entity-mappings
+  xmlns="http://java.sun.com/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+  version="1.0">
+  
+  <sequence-generator name="bpel_sequence" sequence-name="bpel_sequence"/>
+
+<!-- ode-store persistence unit -->
+<entity class="org.apache.ode.dao.jpa.store.ProcessConfPropertyDaoImpl">
+  <attributes>
+    <id name="_id">
+    	<column name="ID"/>
+      <generated-value generator="bpel_sequence" strategy="AUTO"/>
+    </id>
+  </attributes>
+</entity>
+
+<entity class="org.apache.ode.dao.jpa.store.VersionTrackerDAOImpl">
+  <attributes>
+    <id name="_id">
+    	<column name="ID"/>
+      <generated-value generator="bpel_sequence" strategy="AUTO"/>
+    </id>
+  </attributes>
+</entity>
+
+</entity-mappings>

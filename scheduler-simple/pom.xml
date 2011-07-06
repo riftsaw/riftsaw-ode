@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.jboss.soa.bpel</groupId>
+    <artifactId>riftsaw-scheduler-simple</artifactId>
+    <name>ODE :: BPEL Scheduler Simple</name>
+    <parent>
+        <groupId>org.jboss.soa.bpel</groupId>
+        <artifactId>ode</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.soa.bpel</groupId>
+            <artifactId>riftsaw-bpel-api</artifactId>
+        </dependency>
+        <dependency>
+        	<groupId>org.jboss.soa.bpel</groupId>
+        	<artifactId>riftsaw-bpel-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.soa.bpel</groupId>
+            <artifactId>riftsaw-utils</artifactId>
+        </dependency>
+        <dependency>
+      		<groupId>org.jboss.soa.bpel</groupId>
+      		<artifactId>riftsaw-bpel-epr</artifactId>
+    	</dependency>
+        <dependency>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+	  	  <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>backport-util-concurrent</groupId>
+          <artifactId>backport-util-concurrent</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.geronimo.modules</groupId>
+          <artifactId>geronimo-kernel</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.geronimo.components</groupId>
+          <artifactId>geronimo-transaction</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.geronimo.components</groupId>
+          <artifactId>geronimo-connector</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-ejb_2.1_spec</artifactId>
+	      <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </dependency>
+	    <dependency>
+	      <groupId>org.jboss.soa.bpel</groupId>
+	      <artifactId>riftsaw-dao-jpa-hibernate</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.soa.bpel</groupId>
+	      <artifactId>riftsaw-dao-jpa</artifactId>
+	      <scope>test</scope>
+	    </dependency>        
+    </dependencies>
+
+    <build>
+     <plugins>   
+      	<plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/RetriesTest.java</exclude>
+            <exclude>**/SchedulerThreadTest.java</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>hibernate-jpa</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <reportsDirectory>${project.build.directory}/surefire-reports/hibernate-jpa</reportsDirectory>
+              <systemProperties>
+                <property>
+                  <name>dao.factory.scheduler</name>
+                  <value>org.apache.ode.dao.jpa.hibernate.SchedulerDAOConnectionFactoryImpl</value>
+                </property>
+              </systemProperties>
+            </configuration>
+          </execution>
+         </executions>
+    	</plugin>
+    </plugins>
+   </build>
+</project>

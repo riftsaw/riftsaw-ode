@@ -1,0 +1,164 @@
+<entity-mappings
+  xmlns="http://java.sun.com/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+  version="1.0">
+  
+  <sequence-generator name="bpel_sequence" sequence-name="bpel_sequence"/>
+  
+  <!-- ode-bpel persistence unit -->
+  <entity class="org.apache.ode.dao.jpa.bpel.ActivityRecoveryDAOImpl">
+    <attributes>
+      <id name="_id" >
+        <column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.CorrelationSetDAOImpl">
+    <attributes>
+      <id name="_correlationSetId">
+      	<column name="CORRELATION_SET_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+
+   <entity class="org.apache.ode.dao.jpa.bpel.CorrelatorDAOImpl">
+    <attributes>
+      <id name="_correlatorId">
+      	<column name="CORRELATOR_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.EventDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="EVENT_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.FaultDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="FAULT_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.MessageDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="MESSAGE_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.MessageRouteDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="MESSAGE_ROUTE_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.PartnerLinkDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="PARTNER_LINK_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.ProcessDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.ProcessInstanceDAOImpl">
+    <attributes>
+      <id name="_instanceId">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.ScopeDAOImpl">
+    <attributes>
+      <id name="_scopeInstanceId">
+      	<column name="SCOPE_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.XmlDataDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="XML_DATA_ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.CorrSetProperty">
+    <attributes>
+      <id name="_id">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.MexProperty">
+    <attributes>
+      <id name="_id">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.bpel.XmlDataProperty">
+    <attributes>
+      <id name="_id">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <!-- ode-store persistence unit -->
+  <entity class="org.apache.ode.dao.jpa.store.ProcessConfPropertyDaoImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+  <entity class="org.apache.ode.dao.jpa.store.VersionTrackerDAOImpl">
+    <attributes>
+      <id name="_id">
+      	<column name="ID"/>
+        <generated-value generator="bpel_sequence" strategy="AUTO"/>
+      </id>
+    </attributes>
+  </entity>
+  
+</entity-mappings>
