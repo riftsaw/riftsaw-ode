@@ -26,6 +26,7 @@ import org.apache.ode.dao.bpel.ScopeDAO;
 import org.apache.ode.dao.bpel.ScopeStateEnum;
 import org.apache.ode.dao.bpel.XmlDataDAO;
 import org.apache.ode.bpel.evt.BpelEvent;
+import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -72,10 +73,12 @@ public class ScopeDAOImpl extends BpelDAO implements ScopeDAO {
 
 	@ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST})
 	@JoinColumn(name="PARENT_SCOPE_ID")
+    @ForeignKey(name="none")
 	private ScopeDAOImpl _parentScope;
 	
 	@OneToMany(targetEntity=ScopeDAOImpl.class,mappedBy="_parentScope",fetch=FetchType.LAZY,cascade={CascadeType.ALL})
-	private Collection<ScopeDAO> _childScopes = new ArrayList<ScopeDAO>();
+	@ForeignKey(name="none")
+    private Collection<ScopeDAO> _childScopes = new ArrayList<ScopeDAO>();
 	@OneToMany(targetEntity=CorrelationSetDAOImpl.class,mappedBy="_scope",fetch=FetchType.LAZY,cascade={CascadeType.ALL})
 	private Collection<CorrelationSetDAO> _correlationSets = new ArrayList<CorrelationSetDAO>();
 	@OneToMany(targetEntity=PartnerLinkDAOImpl.class,mappedBy="_scope",fetch= FetchType.LAZY,cascade={CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
