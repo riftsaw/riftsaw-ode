@@ -77,6 +77,9 @@ public interface MyRoleMessageExchange extends MessageExchange {
     @SuppressWarnings("unchecked")
     Future invoke(Message request);
 
+    @SuppressWarnings("unchecked")
+    Future invoke(Message request, boolean immediate);
+
     /**
      * Complete the message, exchange: indicates that the client has receive the
      * response (if any).

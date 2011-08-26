@@ -398,10 +398,12 @@ public class BpelEngineImpl implements BpelEngine {
     }
 
     public void onScheduledJob(Scheduler.JobInfo jobInfo) throws Scheduler.JobProcessorException {
-        final JobDetails we = jobInfo.jobDetail;
-
-        if( __log.isTraceEnabled() ) __log.trace("[JOB] onScheduledJob " + jobInfo + "" + we.getInstanceId());
+        if( __log.isTraceEnabled() ) __log.trace("[JOB] onScheduledJob " + jobInfo + "" + jobInfo.jobDetail.getInstanceId());
         
+        onScheduledJob(jobInfo.jobDetail);
+    }
+    
+    protected void onScheduledJob(JobDetails we) {
         acquireInstanceLock(we.getInstanceId());
         
         // DONT PUT CODE HERE-need this method real tight in a try/catch block, we need to handle
@@ -459,7 +461,7 @@ public class BpelEngineImpl implements BpelEngine {
                         }
                     }
                 }
-                process.handleJobDetails(jobInfo.jobDetail);
+                process.handleJobDetails(we);
                 debuggingDelay();
             } finally {
                 Thread.currentThread().setContextClassLoader(cl);

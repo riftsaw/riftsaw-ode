@@ -113,6 +113,11 @@ public class MyRoleMessageExchangeImpl extends MessageExchangeImpl implements My
 
     @SuppressWarnings("unchecked")
     public Future invoke(Message request) {
+    	return(invoke(request, false));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Future invoke(Message request, boolean immediate) {
         if (request == null) {
             String errmsg = "Must pass non-null message to invoke()!";
             __log.fatal(errmsg);
@@ -153,7 +158,9 @@ public class MyRoleMessageExchangeImpl extends MessageExchangeImpl implements My
             setStatus(Status.ASYNC);
             Replayer replayer = Replayer.replayer.get();
             if (replayer == null) {
-                if (target.isInMemory())
+            	if (immediate)
+                    _engine.onScheduledJob(we);
+            	else if (target.isInMemory())
                     _engine._contexts.scheduler.scheduleVolatileJob(true, we);
                 else
                     _engine._contexts.scheduler.schedulePersistedJob(we, null);
