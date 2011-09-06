@@ -41,6 +41,9 @@
         <class>org.apache.ode.dao.jpa.bpel.XmlDataProperty</class>
         <class>org.jboss.bpm.monitor.model.bpaf.Event</class>
         <class>org.jboss.bpm.monitor.model.bpaf.Tuple</class>
+	    <properties>
+	        <property name="jboss.as.jpa.providerModule" value="org.hibernate:3"/>
+	    </properties>
     </persistence-unit>
     <persistence-unit name="ode-store" transaction-type="JTA">
 		<mapping-file>META-INF/riftsaw-ode-store.xml</mapping-file>
@@ -48,9 +51,15 @@
 	    <class>org.apache.ode.dao.jpa.store.ProcessConfPropertyDaoImpl</class>
 	    <class>org.apache.ode.dao.jpa.store.DeploymentUnitDaoImpl</class>
 	    <class>org.apache.ode.dao.jpa.store.VersionTrackerDAOImpl</class>	    
+	    <properties>
+	        <property name="jboss.as.jpa.providerModule" value="org.hibernate:3"/>
+	    </properties>
     </persistence-unit>
 	<persistence-unit name="ode-scheduler" transaction-type="JTA">
 	  <class>org.apache.ode.dao.jpa.scheduler.JobDAOImpl</class>
+	    <properties>
+	        <property name="jboss.as.jpa.providerModule" value="org.hibernate:3"/>
+	    </properties>
 	</persistence-unit>
     
     
