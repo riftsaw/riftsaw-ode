@@ -50,24 +50,26 @@
       <groupId>org.jboss.soa.bpel</groupId>
       <artifactId>riftsaw-dao-jpa</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
+      <version>3.6.6.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>3.6.6.Final</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-tools</artifactId>
-      <version>3.2.0.ga</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-annotations</artifactId>
-      <version>3.4.0.GA</version>
+      <version>3.2.4.GA</version>
+      <type>jar</type>
     </dependency>
     <dependency>
       <groupId>javassist</groupId>
       <artifactId>javassist</artifactId>
-    </dependency> 
+    </dependency--> 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
@@ -76,7 +78,7 @@
 
     <build>
         <plugins>
-            <plugin>
+            <!--plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -93,7 +95,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
             <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>

@@ -92,8 +92,7 @@ public class HibernateUtil {
         }
         if (txm != null) {
             props.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "jta");
-            props.put(Environment.TRANSACTION_MANAGER_STRATEGY, HibernateTransactionManagerLookup.class.getName());
-            //props.put(Environment.TRANSACTION_STRATEGY, "org.apache.ode.dao.jpa.hibernate.JotmTransactionFactory");
+            props.put(Environment.JTA_PLATFORM, OdeJtaPlatform.class.getName());
             HibernateUtil.registerTransactionManager(guid, txm);
             props.put("javax.persistence.transactionType", "JTA");
         } else {

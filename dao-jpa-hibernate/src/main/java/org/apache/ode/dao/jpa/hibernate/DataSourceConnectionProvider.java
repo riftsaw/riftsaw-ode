@@ -21,26 +21,42 @@ package org.apache.ode.dao.jpa.hibernate;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ode.utils.DbIsolation;
-
 import org.hibernate.HibernateException;
-import org.hibernate.connection.ConnectionProvider;
+import org.hibernate.service.UnknownUnwrapTypeException;
+import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.service.spi.Configurable;
+import org.hibernate.service.spi.Stoppable;
 
+/**
+ * 
+ * @author jeffyu
+ *
+ */
+public class DataSourceConnectionProvider implements ConnectionProvider, Configurable, Stoppable  {
 
-public class DataSourceConnectionProvider implements ConnectionProvider {
+  private static final long serialVersionUID = -2686513656521329257L;
 
   private Properties _props;
+  
+  private boolean available = true;
   
   public DataSourceConnectionProvider() {
   }
   
-  public void configure(Properties props) throws HibernateException {
-    _props = props;
+  @SuppressWarnings( {"unchecked"})
+  public void configure(Map properties) {
+	 _props = new Properties();
+	 _props.putAll(properties);
   }
 
   public Connection getConnection() throws SQLException {
+	if (!available) {
+		throw new HibernateException( "Provider is closed!" );
+	}
     Connection c = HibernateUtil.getConnection(_props);
     DbIsolation.setIsolationLevel(c);
     return c;
@@ -50,12 +66,28 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
     con.close();
   }
 
-  public void close() throws HibernateException {
-
-  }
-
   public boolean supportsAggressiveRelease() {
     return true;
   }
+
+  public boolean isUnwrappableAs(Class unwrapType) {
+		return ConnectionProvider.class.equals(unwrapType) ||
+				DataSourceConnectionProvider.class.isAssignableFrom(unwrapType);
+  }
+  
+  @SuppressWarnings( {"unchecked"})
+  public <T> T unwrap(Class<T> unwrapType) {
+		if (ConnectionProvider.class.equals(unwrapType) ||
+				DataSourceConnectionProvider.class.isAssignableFrom(unwrapType)) {
+			return (T) this;
+		} else {
+			throw new UnknownUnwrapTypeException( unwrapType );
+		}
+  }
+
+  public void stop() {
+	available = false;
+  }
+
 
 }
