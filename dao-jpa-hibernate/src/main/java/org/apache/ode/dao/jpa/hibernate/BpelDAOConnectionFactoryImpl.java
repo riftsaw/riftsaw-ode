@@ -23,7 +23,6 @@ import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -32,8 +31,27 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ode.dao.bpel.BpelDAOConnection;
 import org.apache.ode.dao.bpel.BpelDAOConnectionFactory;
 import org.apache.ode.dao.jpa.JpaOperator;
+import org.apache.ode.dao.jpa.bpel.ActivityRecoveryDAOImpl;
 import org.apache.ode.dao.jpa.bpel.BpelDAOConnectionImpl;
+import org.apache.ode.dao.jpa.bpel.CorrSetProperty;
+import org.apache.ode.dao.jpa.bpel.CorrelationSetDAOImpl;
+import org.apache.ode.dao.jpa.bpel.CorrelatorDAOImpl;
+import org.apache.ode.dao.jpa.bpel.EventDAOImpl;
+import org.apache.ode.dao.jpa.bpel.FaultDAOImpl;
+import org.apache.ode.dao.jpa.bpel.MessageDAOImpl;
+import org.apache.ode.dao.jpa.bpel.MessageExchangeDAOImpl;
+import org.apache.ode.dao.jpa.bpel.MessageRouteDAOImpl;
+import org.apache.ode.dao.jpa.bpel.MexProperty;
+import org.apache.ode.dao.jpa.bpel.PartnerLinkDAOImpl;
+import org.apache.ode.dao.jpa.bpel.ProcessDAOImpl;
+import org.apache.ode.dao.jpa.bpel.ProcessInstanceDAOImpl;
+import org.apache.ode.dao.jpa.bpel.ScopeDAOImpl;
+import org.apache.ode.dao.jpa.bpel.XmlDataDAOImpl;
+import org.apache.ode.dao.jpa.bpel.XmlDataProperty;
 import org.apache.ode.il.config.OdeConfigProperties;
+import org.hibernate.ejb.Ejb3Configuration;
+import org.jboss.bpm.monitor.model.bpaf.Event;
+import org.jboss.bpm.monitor.model.bpaf.Tuple;
 
 /**
 
@@ -50,8 +68,29 @@ public class BpelDAOConnectionFactoryImpl implements BpelDAOConnectionFactory {
         this._txm = txm;
         this._ds = (DataSource) env;
         Map emfProperties = HibernateUtil.buildConfig(OdeConfigProperties.PROP_DAOCF + ".", odeConfig, _txm, _ds);
-        _emf = Persistence.createEntityManagerFactory("ode-bpel", emfProperties);
-
+        //_emf = Persistence.createEntityManagerFactory("ode-bpel", emfProperties);
+        Ejb3Configuration cfg = new Ejb3Configuration();
+        _emf =cfg.addAnnotatedClass(ActivityRecoveryDAOImpl.class)
+        		  .addAnnotatedClass(CorrelationSetDAOImpl.class)
+        		  .addAnnotatedClass(CorrelatorDAOImpl.class)
+        		  .addAnnotatedClass(EventDAOImpl.class)
+        		  .addAnnotatedClass(FaultDAOImpl.class)
+        		  .addAnnotatedClass(MessageDAOImpl.class)
+        		  .addAnnotatedClass(MessageExchangeDAOImpl.class)
+        		  .addAnnotatedClass(MessageRouteDAOImpl.class)
+        		  .addAnnotatedClass(PartnerLinkDAOImpl.class)
+        		  .addAnnotatedClass(ProcessDAOImpl.class)
+        		  .addAnnotatedClass(ProcessInstanceDAOImpl.class)
+        		  .addAnnotatedClass(ScopeDAOImpl.class)
+        		  .addAnnotatedClass(XmlDataDAOImpl.class)
+        		  .addAnnotatedClass(CorrSetProperty.class)
+        		  .addAnnotatedClass(MexProperty.class)
+        		  .addAnnotatedClass(XmlDataProperty.class)
+        		  .addAnnotatedClass(Event.class)
+        		  .addAnnotatedClass(Tuple.class)
+        		  .configure(emfProperties)
+        		  .buildEntityManagerFactory();
+        
         // dirty hack
         odeConfig.put("ode.emf", _emf);
 
