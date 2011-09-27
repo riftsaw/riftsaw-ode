@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -115,16 +116,24 @@ public class BpelEngineImpl implements BpelEngine {
     
     /** Manage instance-level locks. */
     private final InstanceLockManager _instanceLockManager = new InstanceLockManager();
+    private boolean _useLocks=false;
 
     final Contexts _contexts;
 
     private final Map<QName, Long> _hydratedSizes = new HashMap<QName, Long>();
     private final Map<QName, Long> _unhydratedSizes = new HashMap<QName, Long>();
+    private Properties _configProperties;
     
-    public BpelEngineImpl(Contexts contexts) {
+    public BpelEngineImpl(Contexts contexts, Properties config) {
         _contexts = contexts;
         _sharedEps = new SharedEndpoints();
         _sharedEps.init();
+        _configProperties = config;
+        
+        if (_configProperties != null) {
+            _useLocks = _configProperties.getProperty("explicit.instance.locks",
+                    Boolean.FALSE.toString()).equalsIgnoreCase(Boolean.TRUE.toString());
+        }
     }
 
     public SharedEndpoints getSharedEndpoints() {
@@ -376,6 +385,10 @@ public class BpelEngineImpl implements BpelEngine {
     }
     
     public void acquireInstanceLock(final Long iid) {
+        if (!_useLocks) {
+            return;
+        }
+        
         // We lock the instance to prevent concurrent transactions and prevent unnecessary rollbacks,
         // Note that we don't want to wait too long here to get our lock, since we are likely holding
         // on to scheduler's locks of various sorts.

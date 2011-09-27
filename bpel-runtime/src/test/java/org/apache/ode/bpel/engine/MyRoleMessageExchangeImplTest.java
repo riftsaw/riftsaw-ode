@@ -91,7 +91,7 @@ public class MyRoleMessageExchangeImplTest extends MockObjectTestCase {
         
         contexts = new Contexts();
         contexts.scheduler = scheduler;
-        engine = new BpelEngineImpl(contexts);
+        engine = new BpelEngineImpl(contexts, new Properties());
 
         myRoleMexImpl = new TestMyRoleMessageExchangeImpl();
     }

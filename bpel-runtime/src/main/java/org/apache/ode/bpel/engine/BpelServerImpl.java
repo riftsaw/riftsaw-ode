@@ -255,7 +255,7 @@ public class BpelServerImpl implements BpelServer, Scheduler.JobProcessor {
 
     // enable extensibility
     protected BpelEngineImpl createBpelEngineImpl(Contexts contexts) {
-        return new BpelEngineImpl(contexts);
+        return new BpelEngineImpl(contexts, _configProperties);
     }
     
     public void shutdown() throws BpelEngineException {
