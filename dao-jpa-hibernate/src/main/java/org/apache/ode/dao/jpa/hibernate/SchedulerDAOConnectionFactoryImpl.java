@@ -20,18 +20,21 @@ package org.apache.ode.dao.jpa.hibernate;
 
 import java.util.Map;
 import java.util.Properties;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.dao.jpa.JpaOperator;
+import org.apache.ode.dao.jpa.scheduler.JobDAOImpl;
 import org.apache.ode.dao.jpa.scheduler.SchedulerDAOConnectionImpl;
 import org.apache.ode.dao.scheduler.SchedulerDAOConnection;
 import org.apache.ode.dao.scheduler.SchedulerDAOConnectionFactory;
 import org.apache.ode.il.config.OdeConfigProperties;
+import org.hibernate.ejb.Ejb3Configuration;
 
 /**
 
@@ -48,7 +51,11 @@ public class SchedulerDAOConnectionFactoryImpl implements SchedulerDAOConnection
         this._txm = txm;
         this._ds = (DataSource) env;
         Map emfProperties = HibernateUtil.buildConfig(OdeConfigProperties.PROP_DAOCF_SCHEDULER + ".", odeConfig, _txm, _ds);
-        _emf = Persistence.createEntityManagerFactory("ode-scheduler", emfProperties);
+        //_emf = Persistence.createEntityManagerFactory("ode-scheduler", emfProperties);
+        Ejb3Configuration cfg = new Ejb3Configuration();
+        _emf = cfg.addAnnotatedClass(JobDAOImpl.class)
+        		  .configure(emfProperties)
+        		  .createEntityManagerFactory();
 
     }
 

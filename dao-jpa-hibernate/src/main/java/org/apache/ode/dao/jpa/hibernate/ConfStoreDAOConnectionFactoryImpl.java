@@ -23,7 +23,6 @@ import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -31,9 +30,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.dao.jpa.JpaOperator;
 import org.apache.ode.dao.jpa.store.ConfStoreDAOConnectionImpl;
+import org.apache.ode.dao.jpa.store.DeploymentUnitDaoImpl;
+import org.apache.ode.dao.jpa.store.ProcessConfDaoImpl;
+import org.apache.ode.dao.jpa.store.ProcessConfPropertyDaoImpl;
+import org.apache.ode.dao.jpa.store.VersionTrackerDAOImpl;
 import org.apache.ode.dao.store.ConfStoreDAOConnection;
 import org.apache.ode.dao.store.ConfStoreDAOConnectionFactory;
 import org.apache.ode.il.config.OdeConfigProperties;
+import org.hibernate.ejb.Ejb3Configuration;
 /**
 
  */
@@ -50,8 +54,14 @@ public class ConfStoreDAOConnectionFactoryImpl implements ConfStoreDAOConnection
     this._txm = txm;
     this._ds = (DataSource) env;
     Map emfProperties = HibernateUtil.buildConfig(OdeConfigProperties.PROP_DAOCF_STORE + ".", odeConfig, _txm, _ds);
-    _emf = Persistence.createEntityManagerFactory("ode-store", emfProperties);
-
+    //_emf = Persistence.createEntityManagerFactory("ode-store", emfProperties);
+    Ejb3Configuration cfg = new Ejb3Configuration();
+    _emf = cfg.addAnnotatedClass(ProcessConfDaoImpl.class)
+    		  .addAnnotatedClass(ProcessConfPropertyDaoImpl.class)
+    		  .addAnnotatedClass(DeploymentUnitDaoImpl.class)
+    		  .addAnnotatedClass(VersionTrackerDAOImpl.class)
+    		  .configure(emfProperties)
+    		  .buildEntityManagerFactory();
   }
 
   public ConfStoreDAOConnection getConnection() {
