@@ -107,6 +107,7 @@ public class MessageExchangeDAOImpl extends BpelDAO implements MessageExchangeDA
     @OneToMany(targetEntity=MexProperty.class,mappedBy="_mex",fetch=FetchType.EAGER,cascade={CascadeType.ALL})
     private Collection<MexProperty> _props = new ArrayList<MexProperty>();
     @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST}) @JoinColumn(name="PROCESS_INSTANCE_ID")
+    @ForeignKey(name="none")
     private ProcessInstanceDAOImpl _processInst;
     @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST}) @JoinColumn(name="PARTNER_LINK_ID")
     private PartnerLinkDAOImpl _partnerLink;

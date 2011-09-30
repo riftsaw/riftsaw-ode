@@ -129,6 +129,7 @@ public class ProcessInstanceDAOImpl extends BpelDAO implements ProcessInstanceDA
     private CorrelatorDAOImpl _instantiatingCorrelator;
 
     @OneToMany(targetEntity=MessageExchangeDAOImpl.class,mappedBy="_processInst",fetch=FetchType.LAZY)
+    @ForeignKey(name="none")
     @SuppressWarnings("unused")
     private Collection<MessageExchangeDAO> _messageExchanges = new ArrayList<MessageExchangeDAO>();
     
