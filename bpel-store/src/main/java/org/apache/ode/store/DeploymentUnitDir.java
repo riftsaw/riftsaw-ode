@@ -55,8 +55,6 @@ import org.apache.ode.utils.InternPool;
 import org.apache.ode.utils.InternPool.InternableBlock;
 import org.apache.ode.utils.fs.FileUtils;
 import org.apache.xmlbeans.XmlOptions;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.w3c.dom.Node;
 
 /**
@@ -123,15 +121,20 @@ class DeploymentUnitDir {
         if (!_descriptorFile.exists())
             throw new IllegalArgumentException("Directory " + dir + " does not contain a deploy.xml file!");
 
+        /*
         try {
-            ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+            org.springframework.context.ApplicationContext ctx =
+                    new org.springframework.context.support.ClassPathXmlApplicationContext("beans.xml");
             _properties = (java.util.Properties) ctx.getBean("properties");
             if (__log.isDebugEnabled()) {
                 __log.debug("Loaded spring properties from file beans.xml:" + _properties + " for " +  _name);
             }
+        } catch (java.lang.NoClassDefFoundError ncdfe) {
+            // Ignore
         } catch (Exception e) {
             __log.info("Can't initialize beans.xml application context " + e + " for " + _name);
         }
+        */
 
     }
 
