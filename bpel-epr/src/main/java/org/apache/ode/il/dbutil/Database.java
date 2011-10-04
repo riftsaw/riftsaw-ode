@@ -202,18 +202,24 @@ public class Database {
         String pClassName = _odeConfig.getDAOConnectionFactory();
 
         __log.debug(__msgs.msgOdeUsingDAOImpl(pClassName));
-
+        
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
         BpelDAOConnectionFactory cf;
         try {
-            cf = (BpelDAOConnectionFactory) Class.forName(pClassName).newInstance();
-        } catch (Exception ex) {
-            String errmsg = __msgs.msgDAOInstantiationFailed(pClassName);
-            __log.error(errmsg, ex);
-            throw new DatabaseConfigException(errmsg, ex);
-        }
+            try {
+                cf = (BpelDAOConnectionFactory) Class.forName(pClassName).newInstance();
+            } catch (Exception ex) {
+                String errmsg = __msgs.msgDAOInstantiationFailed(pClassName);
+                __log.error(errmsg, ex);
+                throw new DatabaseConfigException(errmsg, ex);
+            }
 
-        cf.init(_odeConfig.getProperties(),_txm,getDataSource());
-        return cf;
+            cf.init(_odeConfig.getProperties(),_txm,getDataSource());
+            return cf;
+    	} finally {
+    		Thread.currentThread().setContextClassLoader(old);
+    	}
     }
 
 
@@ -221,36 +227,48 @@ public class Database {
         String pClassName = _odeConfig.getDAOConfStoreConnectionFactory();
 
         __log.debug(__msgs.msgOdeUsingDAOImpl(pClassName));
-
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());    
         ConfStoreDAOConnectionFactory cf;
         try {
-            cf = (ConfStoreDAOConnectionFactory) Class.forName(pClassName).newInstance();
-        } catch (Exception ex) {
-            String errmsg = __msgs.msgDAOInstantiationFailed(pClassName);
-            __log.error(errmsg, ex);
-            throw new DatabaseConfigException(errmsg, ex);
-        }
+            try {
+                cf = (ConfStoreDAOConnectionFactory) Class.forName(pClassName).newInstance();
+            } catch (Exception ex) {
+                String errmsg = __msgs.msgDAOInstantiationFailed(pClassName);
+                __log.error(errmsg, ex);
+                throw new DatabaseConfigException(errmsg, ex);
+            }
 
-        cf.init(_odeConfig.getProperties(),_txm,getDataSource());
-        return cf;
+            cf.init(_odeConfig.getProperties(),_txm,getDataSource());
+            return cf;
+        } finally {
+        	Thread.currentThread().setContextClassLoader(old);
+        }
     }
-    
+
     public SchedulerDAOConnectionFactory createDaoSchedulerCF() throws DatabaseConfigException  {
         String pClassName = _odeConfig.getDAOConfScheduleConnectionFactory();
 
         __log.debug(__msgs.msgOdeUsingDAOImpl(pClassName));
-
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        
         SchedulerDAOConnectionFactory sdcf;
+        
         try {
-            sdcf = (SchedulerDAOConnectionFactory) Class.forName(pClassName).newInstance();
-        } catch (Exception ex) {
-            String errmsg = __msgs.msgDAOInstantiationFailed(pClassName);
-            __log.error(errmsg, ex);
-            throw new DatabaseConfigException(errmsg, ex);
-        }
+            try {
+                sdcf = (SchedulerDAOConnectionFactory) Class.forName(pClassName).newInstance();
+            } catch (Exception ex) {
+                String errmsg = __msgs.msgDAOInstantiationFailed(pClassName);
+                __log.error(errmsg, ex);
+                throw new DatabaseConfigException(errmsg, ex);
+            }
 
-        sdcf.init(_odeConfig.getProperties(), _txm, getDataSource());
-        return sdcf;
+            sdcf.init(_odeConfig.getProperties(), _txm, getDataSource());
+            return sdcf;
+        } finally {
+        	Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
 }
