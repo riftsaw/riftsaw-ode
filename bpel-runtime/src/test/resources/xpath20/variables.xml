@@ -62,4 +62,13 @@
                          </tns:ApplicationData>
 
 	</elementVar>
+	
+	<messageTypeVar name="messageVar"  xmlns:tns="http://foobar" >
+		<tns:ExampleMessage>
+			<parameters>
+					<tns:ApplicationData/>
+			</parameters>
+		</tns:ExampleMessage>
+	</messageTypeVar>
+
 </variables>
