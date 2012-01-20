@@ -122,6 +122,7 @@ public class ProcessInstanceDAOImpl extends BpelDAO implements ProcessInstanceDA
     @Basic @Column(name="FAULT_ID", insertable=false, updatable=false, nullable=true)
     private Long _faultId;
     @OneToOne(fetch=FetchType.LAZY,cascade={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}) @JoinColumn(name="FAULT_ID")
+    @ForeignKey(name="none")
     private FaultDAOImpl _fault;
     @ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST}) @JoinColumn(name="PROCESS_ID")
     private ProcessDAOImpl _process;
