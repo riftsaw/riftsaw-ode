@@ -146,14 +146,15 @@ public class BpelEngineImpl implements BpelEngine {
 
         List<BpelProcess> targets = route(targetService, null);
         List<BpelProcess> activeTargets = new ArrayList<BpelProcess>();
+
+        if (targets == null || targets.size() == 0)
+            throw new BpelEngineException("NoSuchService: " + targetService);
+
         for (BpelProcess target : targets) {
             if (target.getConf().getState() == ProcessState.ACTIVE) {
                 activeTargets.add(target);
             }
         }
-
-        if (targets == null || targets.size() == 0)
-            throw new BpelEngineException("NoSuchService: " + targetService);
         
         if (targets.size() == 1 || activeTargets.size() == 1) {
             // If the number of targets is one, create and return a simple MEX
