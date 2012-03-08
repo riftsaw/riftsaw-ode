@@ -8,7 +8,7 @@
     </description>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
-    <version>3.0.0.20120308-M2</version>
+    <version>3.0.0-SNAPSHOT</version>
     <url>http://ode.apache.org</url>
     <issueManagement>
         <system>jira</system>
@@ -77,7 +77,7 @@
   </developers>
 
     <properties>
-        <ode.version>3.0.0.20120308-M2</ode.version>
+        <ode.version>3.0.0-SNAPSHOT</ode.version>
 	<antlr.version>2.7.7</antlr.version>
 	<axiom.version>1.2.7</axiom.version>
         <commons.codec.version>1.3</commons.codec.version>
