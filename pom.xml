@@ -8,7 +8,7 @@
     </description>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0.20120308-M2</version>
     <url>http://ode.apache.org</url>
     <issueManagement>
         <system>jira</system>
@@ -113,7 +113,7 @@
         <xml-apis.version>1.3.04</xml-apis.version>
 	<javassist.version>3.12.1.GA</javassist.version>
 	<h2.version>1.2.131</h2.version>
-	<activity.monitor.model.version>1.0.0.Final</activity.monitor.model.version>
+	<activity.monitor.model.version>1.2.0.Final</activity.monitor.model.version>
         <jmock.version>1.2.0</jmock.version>
     </properties>
 
