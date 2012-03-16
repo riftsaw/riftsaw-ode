@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.jboss.soa.bpel</groupId>
     <artifactId>ode</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0.20120316-M2</version>
   </parent>
 
   <dependencies>
