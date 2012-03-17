@@ -109,6 +109,8 @@ public class OdeConfigProperties {
     public static final String PROP_CACHE_PROVIDER = "cache.provider";
     
     public static final String PROP_MIGRATION_TRANSACTION_TIMEOUT = "migration.transaction.timeout";
+
+    public static final String PROP_XTS_ENABLE = "xts.enable";
     
     public static final String DEFAULT_TX_FACTORY_CLASS_NAME = "org.apache.ode.il.EmbeddedGeronimoFactory";
 
@@ -390,6 +392,10 @@ public class OdeConfigProperties {
     
     public int getMigrationTransactionTimeout() {
         return Integer.valueOf(getProperty(PROP_MIGRATION_TRANSACTION_TIMEOUT, String.valueOf(0)));
+    }
+
+    public boolean isXTSEnable() {
+        return Boolean.valueOf(getProperty(OdeConfigProperties.PROP_XTS_ENABLE, "false"));
     }
 
 }

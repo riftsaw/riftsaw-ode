@@ -25,10 +25,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.wsdl.Binding;
+import javax.wsdl.BindingOperation;
 import javax.wsdl.Fault;
 import javax.wsdl.Operation;
+import javax.wsdl.extensions.ExtensibilityElement;
+import javax.wsdl.extensions.UnknownExtensibilityElement;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
@@ -85,6 +90,9 @@ import org.apache.ode.bpel.runtime.channels.FaultData;
 import org.apache.ode.bpel.runtime.channels.InvokeResponseChannel;
 import org.apache.ode.bpel.runtime.channels.PickResponseChannel;
 import org.apache.ode.bpel.runtime.channels.TimerResponseChannel;
+import org.apache.ode.bpel.wstx.WebServiceTransaction;
+import org.apache.ode.bpel.wstx.WebServiceTransactionFactory;
+import org.apache.ode.bpel.wstx.WebServiceTransactionType;
 import org.apache.ode.dao.bpel.CorrelationSetDAO;
 import org.apache.ode.dao.bpel.CorrelatorDAO;
 import org.apache.ode.dao.bpel.MessageDAO;
@@ -136,10 +144,13 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
 
     /** Five second maximum for continous execution. */
     private long _maxReductionTimeMs = 2000000;
+    
+    private WebServiceTransaction _wst;
 
     public BpelRuntimeContextImpl(BpelProcess bpelProcess, ProcessInstanceDAO dao, PROCESS PROCESS,
                                   MyRoleMessageExchangeImpl instantiatingMessageExchange) {
         _bpelProcess = bpelProcess;
+        _wst = bpelProcess.getWebServiceTransaction(dao.getInstanceId());
         _dao = dao;
         _iid = dao.getInstanceId();
         _instantiatingMessageExchange = instantiatingMessageExchange;
@@ -243,7 +254,16 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
         _bpelProcess._engine._contexts.scheduler.registerSynchronizer(new Scheduler.Synchronizer() {
             public void afterCompletion(boolean success) {
             }
-            public void beforeCompletion() { 
+            public void beforeCompletion() {
+                if (_wst != null && _wst.isActive() && !_wst.isSubordinate()) {
+                    try {
+                        _wst.rollback();
+                    } catch (Exception e) {
+                        __log.warn("Web service transaction wasn't properly aborted or it is already rolled back.");
+                    } finally {
+                        _bpelProcess.removeWebServiceTransaction(_dao.getInstanceId());
+                    }
+                }
                 _dao.delete(_bpelProcess.getCleanupCategories(false), false);
             }
         });
@@ -272,7 +292,16 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
         _bpelProcess._engine._contexts.scheduler.registerSynchronizer(new Scheduler.Synchronizer() {
             public void afterCompletion(boolean success) {
             }
-            public void beforeCompletion() { 
+            public void beforeCompletion() {
+                if (_wst != null && _wst.isActive() && !_wst.isSubordinate()) {
+                    try {
+                        _wst.commit();
+                    } catch (Exception e) {
+                        __log.warn("Web service transaction wasn't commited or it is already commited.");
+                    } finally {
+                        _bpelProcess.removeWebServiceTransaction(_dao.getInstanceId());
+                    }
+                }
                 _dao.delete(_bpelProcess.getCleanupCategories(true), false);
             }
         });
@@ -706,6 +735,15 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
             public void afterCompletion(boolean success) {
             }
             public void beforeCompletion() {
+                if (_wst != null && _wst.isActive() && !_wst.isSubordinate()) {
+                    try {
+                        _wst.rollback();
+                    } catch (Exception e) {
+                        __log.warn("Web service transaction wasn't properly aborted or it is already rolled back.");
+                    } finally {
+                        _bpelProcess.removeWebServiceTransaction(_dao.getInstanceId());
+                    }
+                }
                 _dao.delete(_bpelProcess.getCleanupCategories(false), false);
             }
         });
@@ -741,13 +779,13 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
     public void checkInvokeExternalPermission() {}
 
     /**
-     * Called back when the process executes an invokation.
+     * Called back when the process executes an invocation.
      * 
-     * @param activityId The activity id in the process definition (id of OInvoke)
-     * @param partnerLinkInstance The partner link variable instance
+     * @param aid The activity id in the process definition (id of OInvoke)
+     * @param partnerLink The partner link variable instance
      * @param operation The wsdl operation.
-     * @param outboundMsg The message sent outside as a DOM
-     * @param invokeResponseChannel Object called back when the response is received.
+     * @param outgoingMessage The message sent outside as a DOM
+     * @param channel Object called back when the response is received.
      * @return The instance id of the message exchange.
      * @throws FaultException When the response is a fault or when the invoke could not be executed
      * in which case it is one of the bpel standard fault.
@@ -775,7 +813,7 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
             BpelProcess.__log.debug("INVOKING PARTNER: partnerLink=" + partnerLink +
                     ", op=" + operation.getName() + " channel=" + channel + ")");
         }
-
+        
         // prepare event
         ProcessMessageExchangeEvent evt = new ProcessMessageExchangeEvent();
         evt.setOperation(operation.getName());
@@ -828,6 +866,45 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
         if (getConfigForPartnerLink(partnerLink.partnerLink).usePeer2Peer && partnerEndpoint != null)
             p2pProcesses = _bpelProcess.getEngine().route(partnerEndpoint.serviceName, mex.getRequest());
 
+        if (_bpelProcess._engine.isXTSEnable()) {
+        
+	        WebServiceTransactionType wstType = getTypeOfWSTAssertion(operation, _bpelProcess.getConf().getDefinitionForService(partnerEndpoint.serviceName).getBindings().values());
+	        
+	        if ((_wst == null || !_wst.isActive()) && wstType != WebServiceTransactionType.NOT_DETERMINED) {
+	            // Creating a distributed transaction if the operation has an AtomicTransaction or BusinessActivity assertion
+	            if (BpelProcess.__log.isDebugEnabled()) {
+	                __log.debug("Creating distributed transaction ...");
+	            }
+	            _wst = WebServiceTransactionFactory.instance(wstType);
+	            if (_wst != null) {
+	                try {
+	                    _wst.begin(_instantiatingMessageExchange.getRequest());
+	                    _bpelProcess.setWebServiceTransaction(_dao.getInstanceId(), _wst);
+	                    if (BpelProcess.__log.isDebugEnabled()) {
+	                        __log.debug("Distributed transaction has been created with id = " + _wst.getTransactionIdentifier());
+	                    }
+	                } catch (Exception e) {
+	                    throw new FaultException(_bpelProcess.getOProcess().constants.qnUnknownFault, "Web Service Transaction error while creating the transaction. "+e.getMessage(), e);
+	                }
+	            }
+	        }
+	
+	        if (_wst != null && _wst.isActive() && wstType != WebServiceTransactionType.NOT_DETERMINED) {
+	            if (wstType != _wst.getType()) {
+	                __log.warn("The invocation requires another type of web service transaction. The coordination context won't be sent.");
+	            } else {
+	                try {
+	                    Element headerElement = message.getHeader();
+	                    headerElement = _wst.putCoordinationContext(headerElement);
+	                    message.setHeader(headerElement);
+	                } catch (Exception e) {
+	                    throw new FaultException(_bpelProcess.getOProcess().constants.qnUnknownFault, "Cannot put transaction context into message header. "+e.getMessage(), e);
+	                }
+	            }
+	        }
+        
+        }
+
         if (p2pProcesses != null && !p2pProcesses.isEmpty()) {
             // Creating a my mex using the same message id as partner mex to "pipe" them
             MyRoleMessageExchange myRoleMex = _bpelProcess.getEngine().createMessageExchange(
@@ -870,6 +947,7 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
                 mex.setStatus(MessageExchange.Status.REQUEST);
                 // Assuming an unreliable protocol, we schedule a task to check if recovery mode will be needed
                 scheduleInvokeCheck(mex, partnerLink.partnerLink, false);
+                
                 _bpelProcess._engine._contexts.mexContext.invokePartner(mex);
             } else {
                 __log.error("Couldn't find endpoint for partner EPR " + DOMUtils.domToString(partnerEPR));
@@ -906,6 +984,49 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
         }
 
         return mexDao.getMessageExchangeId();
+    }
+    
+    @SuppressWarnings("unchecked")
+    private WebServiceTransactionType getTypeOfWSTAssertion(Operation operation, Collection<Binding> bindings){
+        Iterator<Binding> i = bindings.iterator();
+        while(i.hasNext()){
+            Binding b = i.next();
+            List<BindingOperation> bolist = b.getBindingOperations();
+            for(BindingOperation bo : bolist){
+                if(bo.getOperation().getName().compareTo(operation.getName()) != 0)
+                    continue;
+                List<ExtensibilityElement> eelist = bo.getExtensibilityElements();
+                for(ExtensibilityElement ee : eelist){
+                    if (! (ee instanceof UnknownExtensibilityElement))
+                        continue;
+                    UnknownExtensibilityElement uee = (UnknownExtensibilityElement) ee;
+                    if(uee.getElementType().getLocalPart().equals("PolicyReference")){
+                        String uri = uee.getElement().getAttribute("URI").substring(1);
+                        NodeList policyNodeList = uee.getElement().getOwnerDocument().getElementsByTagNameNS("*", "Policy");
+                        for (int j = 0; j < policyNodeList.getLength(); j++) {
+                            Element element = (Element) policyNodeList.item(j);
+                            String refUri = element.getAttributeNS("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd", "Id");
+                            if (refUri != null && refUri.equals(uri)) {
+                                NodeList nlist = element.getElementsByTagNameNS("http://docs.oasis-open.org/ws-tx/wsat/2006/06","ATAssertion");
+                                if(nlist!= null && nlist.getLength() == 1){
+                                    return WebServiceTransactionType.ATOMIC_TRANSACTION;
+                                }
+                                nlist = element.getElementsByTagNameNS("http://docs.oasis-open.org/ws-tx/wsba/2006/06","BAAtomicOutcomeAssertion");
+                                if(nlist!= null && nlist.getLength() == 1){
+                                    return WebServiceTransactionType.BUSINESS_ACTIVITY_ATOMIC_OUTCOME;
+                                }
+                                nlist = element.getElementsByTagNameNS("http://docs.oasis-open.org/ws-tx/wsba/2006/06","BAMixedOutcomeAssertion");
+                                if(nlist!= null && nlist.getLength() == 1){
+                                    return WebServiceTransactionType.BUSINESS_ACTIVITY_MIXED_OUTCOME;
+                                }
+                                return WebServiceTransactionType.NOT_DETERMINED;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return WebServiceTransactionType.NOT_DETERMINED;
     }
     
     // enable extensibility
@@ -1004,6 +1125,15 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
                     throw new BpelEngineException(e);
                 }
             }
+            
+            if (_wst != null && _wst.isActive()) {
+                try {
+                    _wst.complete();
+                } catch (Exception e) {
+                    __log.warn("BusinessActivity partially completion failed.", e);
+                }
+            }
+            
         }
     }
 

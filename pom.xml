@@ -115,6 +115,7 @@
 	<h2.version>1.2.131</h2.version>
 	<activity.monitor.model.version>1.2.1.Final</activity.monitor.model.version>
         <jmock.version>1.2.0</jmock.version>
+        <narayana.version>5.0.0.M1</narayana.version>
     </properties>
 
 

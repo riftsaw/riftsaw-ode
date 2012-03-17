@@ -576,6 +576,10 @@ public class BpelServerImpl implements BpelServer, Scheduler.JobProcessor {
         _engine.setInstanceThrottledMaximumCount(instanceThrottledMaximumCount);
     }
 
+    public void setXTSEnable(boolean xtsEnable) {
+        _engine.setXTSEnable(xtsEnable);
+    }
+
     /**
      * A polled runnable instance that implements this interface will be set 
      * with the contexts before the run() method is called.

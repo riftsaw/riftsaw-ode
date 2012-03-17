@@ -690,6 +690,16 @@ public class BpelEngineImpl implements BpelEngine {
         }
     }
 
+    private boolean _xtsEnable = false;
+    
+    public void setXTSEnable(boolean xtsEnable) {
+        this._xtsEnable = xtsEnable;
+    }
+
+    public boolean isXTSEnable() {
+        return _xtsEnable;
+    }
+
     /**
      * Returns true if the last used process was dehydrated because it was not in-use.
      */

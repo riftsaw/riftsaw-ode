@@ -69,6 +69,7 @@ import org.apache.ode.bpel.runtime.InvalidProcessException;
 import org.apache.ode.bpel.runtime.PROCESS;
 import org.apache.ode.bpel.runtime.PropertyAliasEvaluationContext;
 import org.apache.ode.bpel.runtime.channels.FaultData;
+import org.apache.ode.bpel.wstx.WebServiceTransaction;
 import org.apache.ode.dao.bpel.BpelDAOConnection;
 import org.apache.ode.dao.bpel.DeferredProcessInstanceCleanable;
 import org.apache.ode.dao.bpel.ProcessDAO;
@@ -149,6 +150,9 @@ public class BpelProcess {
     private static final int PROCESS_MEMORY_TO_SERIALIZED_SIZE_RATIO = 5;
     
     private boolean _checkGuid=true;
+    
+    /** Web service transaction of process instance */
+    private Map<Long, WebServiceTransaction> _wstMap;
     
     public BpelProcess(ProcessConf conf) {
         _pid = conf.getProcessId();
@@ -1173,4 +1177,20 @@ public class BpelProcess {
     public long getVersion() {
         return Long.parseLong(_pid.getLocalPart().substring(_pid.getLocalPart().lastIndexOf('-') + 1));
     }
+    
+    public WebServiceTransaction getWebServiceTransaction(Long instanceId) {
+        return (_wstMap != null)?_wstMap.get(instanceId):null;
+    }
+    
+    public void setWebServiceTransaction(Long instanceId, WebServiceTransaction wst) {
+        if (_wstMap == null) {
+            _wstMap = new HashMap<Long, WebServiceTransaction>();
+        }
+        _wstMap.put(instanceId, wst);
+    }
+    
+    public void removeWebServiceTransaction(Long instanceId) {
+        _wstMap.remove(instanceId);
+    }
+    
 }

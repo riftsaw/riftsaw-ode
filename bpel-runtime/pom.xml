@@ -116,6 +116,11 @@
           <groupId>jaxen</groupId>
           <artifactId>jaxen</artifactId>
         </dependency>
+        <dependency>
+			<groupId>org.jboss.narayana.xts</groupId>
+			<artifactId>jbossxts</artifactId>
+			<version>${narayana.version}</version>
+		</dependency>
 
    </dependencies>
 
