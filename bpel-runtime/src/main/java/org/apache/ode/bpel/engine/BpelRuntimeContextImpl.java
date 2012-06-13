@@ -61,6 +61,7 @@ import org.apache.ode.bpel.iapi.Scheduler;
 import org.apache.ode.bpel.iapi.MessageExchange.FailureType;
 import org.apache.ode.bpel.iapi.MessageExchange.MessageExchangePattern;
 import org.apache.ode.bpel.iapi.MessageExchange.Status;
+import org.apache.ode.bpel.iapi.MyRoleMessageExchange.CorrelationStatus;
 import org.apache.ode.bpel.iapi.ProcessConf.CLEANUP_CATEGORY;
 import org.apache.ode.bpel.iapi.ProcessConf.PartnerRoleConfig;
 import org.apache.ode.bpel.iapi.Scheduler.JobDetails;
@@ -1490,6 +1491,11 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
         		__log.warn("A message arrived before a receive is ready for a request/response pattern. This may be processed to success. However, you should consider revising your process since a TCP port and a container thread will be held for a longer time and the process will not scale under heavy load.");
         	}
         	
+        	//marked the MEX as 'MATCHED' from 'QUEUED'
+        	if (CorrelationStatus.QUEUED.toString().equals(mexdao.getCorrelationStatus())) {
+        		mexdao.setCorrelationStatus(CorrelationStatus.MATCHED.toString());
+        	}
+        	
             for (MessageRouteDAO mroute : mroutes) {
                 // We have a match, so we can get rid of the routing entries.
                 correlator.removeRoutes(mroute.getGroupId(), _dao);
@@ -1503,7 +1509,7 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
                 BpelProcess.__log.debug("SELECT: " + mroute.getGroupId() + ": matched to MESSAGE " + mexdao
                         + " on CKEYSET " + ckeySet);
             }
-
+            
             MyRoleMessageExchangeImpl mex = new MyRoleMessageExchangeImpl(_bpelProcess, _bpelProcess._engine, mexdao);
 
             inputMsgMatch(mroute.getGroupId(), mroute.getIndex(), mex);

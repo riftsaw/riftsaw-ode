@@ -22,6 +22,7 @@ package org.apache.ode.dao.jpa.bpel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.common.CorrelationKeySet;
+import org.apache.ode.bpel.iapi.MyRoleMessageExchange.CorrelationStatus;
 import org.apache.ode.dao.bpel.*;
 
 import javax.persistence.*;
@@ -75,7 +76,8 @@ public class CorrelatorDAOImpl extends BpelDAO implements CorrelatorDAO {
         // TODO: this thing does not seem to be scalable: loading up based on a correlator???
         for (Iterator<MessageExchangeDAOImpl> itr = _exchanges.iterator(); itr.hasNext();) {
             MessageExchangeDAOImpl mex = itr.next();
-            if (mex.getCorrelationKeySet().isRoutableTo(correlationKeySet, false)) {
+            if (!CorrelationStatus.MATCHED.toString().equals(mex.getCorrelationStatus()) 
+            		&& mex.getCorrelationKeySet().isRoutableTo(correlationKeySet, false)) {
                 itr.remove();
                 return mex;
             }
