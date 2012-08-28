@@ -107,7 +107,12 @@ public class BusinessActivity implements WebServiceTransaction {
     }
     
     public void complete() throws UnknownTransactionException, SystemException, WrongStateException {
-        _uba.complete();
+        try {
+            resume();
+            _uba.complete();
+        } catch (WrongStateException ex) {
+            __log.warn("Business Activity Transaction WrongStateException for completion.");
+        }
     }
 
     public boolean isActive() {

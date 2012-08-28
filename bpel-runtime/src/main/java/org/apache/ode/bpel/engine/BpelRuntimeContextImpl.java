@@ -1130,7 +1130,7 @@ public class BpelRuntimeContextImpl implements BpelRuntimeContext {
                 try {
                     _wst.complete();
                 } catch (Exception e) {
-                    __log.warn("BusinessActivity partially completion failed.", e);
+                    __log.warn("BusinessActivity partial completion failed.", e);
                 }
             }
             
