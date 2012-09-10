@@ -33,6 +33,10 @@
 
   <dependencies>
     <dependency>
+    	<groupId>xerces</groupId>
+    	<artifactId>xercesImpl</artifactId>
+    </dependency>
+    <dependency>
         <groupId>org.apache.ws.commons.axiom</groupId>
         <artifactId>axiom-api</artifactId>
     </dependency>
