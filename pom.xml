@@ -77,7 +77,6 @@
   </developers>
 
     <properties>
-        <ode.version>3.0.0-SNAPSHOT</ode.version>
 	<antlr.version>2.7.7</antlr.version>
 	<axiom.version>1.2.7</axiom.version>
         <commons.codec.version>1.3</commons.codec.version>
@@ -276,92 +275,92 @@
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-agents</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-runtime</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-ql</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-schemas</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-api</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-dao</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-compiler</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-obj</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-scripts</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-store</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-jacob</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-epr</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-dao-jpa</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-tools</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-utils</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-dao-jpa-hibernate</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-scheduler-simple</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.soa.bpel</groupId>
                 <artifactId>riftsaw-bpel-test</artifactId>
-                <version>${ode.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>xalan</groupId>
