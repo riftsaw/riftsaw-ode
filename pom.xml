@@ -100,7 +100,7 @@
         <jencks.version>2.1</jencks.version>
         <log4j.version>1.2.13</log4j.version>
         <saxon.version>9.1.0.8</saxon.version>
-        <slf4j.version>1.4.3</slf4j.version>
+        <slf4j.version>1.6.1</slf4j.version>
         <xerces.version>2.9.0</xerces.version>
         <xmlresolver.version>1.2</xmlresolver.version>
         <xmlbeans.version>2.2.0</xmlbeans.version>
@@ -610,7 +610,7 @@
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>jcl104-over-slf4j</artifactId>
+                <artifactId>jcl-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
         </dependencies>
