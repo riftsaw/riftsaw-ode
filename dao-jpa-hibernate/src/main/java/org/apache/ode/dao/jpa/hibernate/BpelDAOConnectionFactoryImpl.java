@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -31,27 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ode.dao.bpel.BpelDAOConnection;
 import org.apache.ode.dao.bpel.BpelDAOConnectionFactory;
 import org.apache.ode.dao.jpa.JpaOperator;
-import org.apache.ode.dao.jpa.bpel.ActivityRecoveryDAOImpl;
 import org.apache.ode.dao.jpa.bpel.BpelDAOConnectionImpl;
-import org.apache.ode.dao.jpa.bpel.CorrSetProperty;
-import org.apache.ode.dao.jpa.bpel.CorrelationSetDAOImpl;
-import org.apache.ode.dao.jpa.bpel.CorrelatorDAOImpl;
-import org.apache.ode.dao.jpa.bpel.EventDAOImpl;
-import org.apache.ode.dao.jpa.bpel.FaultDAOImpl;
-import org.apache.ode.dao.jpa.bpel.MessageDAOImpl;
-import org.apache.ode.dao.jpa.bpel.MessageExchangeDAOImpl;
-import org.apache.ode.dao.jpa.bpel.MessageRouteDAOImpl;
-import org.apache.ode.dao.jpa.bpel.MexProperty;
-import org.apache.ode.dao.jpa.bpel.PartnerLinkDAOImpl;
-import org.apache.ode.dao.jpa.bpel.ProcessDAOImpl;
-import org.apache.ode.dao.jpa.bpel.ProcessInstanceDAOImpl;
-import org.apache.ode.dao.jpa.bpel.ScopeDAOImpl;
-import org.apache.ode.dao.jpa.bpel.XmlDataDAOImpl;
-import org.apache.ode.dao.jpa.bpel.XmlDataProperty;
 import org.apache.ode.il.config.OdeConfigProperties;
-import org.hibernate.ejb.Ejb3Configuration;
-import org.jboss.bpm.monitor.model.bpaf.Event;
-import org.jboss.bpm.monitor.model.bpaf.Tuple;
 
 /**
 
@@ -68,28 +50,7 @@ public class BpelDAOConnectionFactoryImpl implements BpelDAOConnectionFactory {
         this._txm = txm;
         this._ds = (DataSource) env;
         Map emfProperties = HibernateUtil.buildConfig(OdeConfigProperties.PROP_DAOCF + ".", odeConfig, _txm, _ds);
-        //_emf = Persistence.createEntityManagerFactory("ode-bpel", emfProperties);
-        Ejb3Configuration cfg = new Ejb3Configuration();
-        _emf =cfg.addAnnotatedClass(ActivityRecoveryDAOImpl.class)
-        		  .addAnnotatedClass(CorrelationSetDAOImpl.class)
-        		  .addAnnotatedClass(CorrelatorDAOImpl.class)
-        		  .addAnnotatedClass(EventDAOImpl.class)
-        		  .addAnnotatedClass(FaultDAOImpl.class)
-        		  .addAnnotatedClass(MessageDAOImpl.class)
-        		  .addAnnotatedClass(MessageExchangeDAOImpl.class)
-        		  .addAnnotatedClass(MessageRouteDAOImpl.class)
-        		  .addAnnotatedClass(PartnerLinkDAOImpl.class)
-        		  .addAnnotatedClass(ProcessDAOImpl.class)
-        		  .addAnnotatedClass(ProcessInstanceDAOImpl.class)
-        		  .addAnnotatedClass(ScopeDAOImpl.class)
-        		  .addAnnotatedClass(XmlDataDAOImpl.class)
-        		  .addAnnotatedClass(CorrSetProperty.class)
-        		  .addAnnotatedClass(MexProperty.class)
-        		  .addAnnotatedClass(XmlDataProperty.class)
-        		  .addAnnotatedClass(Event.class)
-        		  .addAnnotatedClass(Tuple.class)
-        		  .configure(emfProperties)
-        		  .buildEntityManagerFactory();
+        _emf = Persistence.createEntityManagerFactory("ode-bpel", emfProperties);
         
         // dirty hack
         odeConfig.put("ode.emf", _emf);
@@ -113,42 +74,6 @@ public class BpelDAOConnectionFactoryImpl implements BpelDAOConnectionFactory {
     public void shutdown() {
         _emf.close();
     }
-
-
-    //private static final String DEFAULT_HIBERNATE_DIALECT = "org.hibernate.dialect.DerbyDialect";
-    
-    //Because the JBoss AS 5.1.0.GA uses Hibernate 3.3.1.GA
-    //While SOA-P 5 uses Hibernate 3.3.2.GA, they are different for guessDialect, so comment it now.
-    
-/*    private static String guessDialect(DataSource dataSource) {
-
-        String dialect = null;
-        // Open a connection and use that connection to figure out database
-        // product name/version number in order to decide which Hibernate
-        // dialect to use.
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            Dialect d = DialectFactory.buildDialect(new Properties(), conn);
-            dialect = d.getClass().getName();
-        } catch (SQLException se) {
-            __log.error(se);
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException ex) {
-                __log.error(ex);
-            }
-        }
-
-        if (dialect == null) {
-            __log.info("Cannot determine hibernate dialect for this database: using the default one.");
-            dialect = DEFAULT_HIBERNATE_DIALECT;
-        }
-
-        return dialect;
-
-    }  */  
 
 }
 
