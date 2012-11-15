@@ -32,6 +32,7 @@ import org.apache.ode.bpel.evt.VariableModificationEvent;
 import org.apache.ode.bpel.o.OFailureHandling;
 import org.apache.ode.bpel.o.OInvoke;
 import org.apache.ode.bpel.o.OScope;
+import org.apache.ode.bpel.o.OVarType;
 import org.apache.ode.bpel.runtime.channels.ActivityRecoveryChannel;
 import org.apache.ode.bpel.runtime.channels.ActivityRecoveryChannelListener;
 import org.apache.ode.bpel.runtime.channels.FaultData;
@@ -172,8 +173,15 @@ public class INVOKE extends ACTIVITY {
                         QName faultName = getBpelRuntimeContext().getPartnerFault(mexId);
                         Element msg = getBpelRuntimeContext().getPartnerResponse(mexId);
                         QName msgType = getBpelRuntimeContext().getPartnerResponseType(mexId);
+                        
+                        OVarType varType=_oinvoke.getOwner().messageTypes.get(msgType);
+                        
+                        if (varType == null) {
+                            varType = _oinvoke.getOwner().elementTypes.get(msgType);
+                        }
+                        
                         FaultData fault = createFault(faultName, msg,
-                                _oinvoke.getOwner().messageTypes.get(msgType), _self.o);
+                                varType, _self.o);
                         _self.parent.completed(fault, CompensationHandler.emptySet());
                         getBpelRuntimeContext().releasePartnerMex(mexId, false);
                     }
