@@ -110,10 +110,10 @@ public class ProcessConfImpl implements ProcessConf {
     
     private final boolean generateProcessEventsAll;
     
-    private Cache<QName, ProcessState> _statesCache;
+    private Cache<String, String> _statesCache;
 
     ProcessConfImpl(QName pid, QName type, long version, DeploymentUnitDir du, TDeployment.Process pinfo, Date deployDate,
-                    Map<QName, Node> props, Cache<QName, ProcessState> states, EndpointReferenceContext eprContext, File configDir, boolean generateProcessEventsAll) {
+                    Map<QName, Node> props, Cache<String, String> states, EndpointReferenceContext eprContext, File configDir, boolean generateProcessEventsAll) {
         _pid = pid;
         _version = version;
         _du = du;
@@ -295,11 +295,11 @@ public class ProcessConfImpl implements ProcessConf {
     }
 
     public ProcessState getState() {
-        return _statesCache.get(_pid);
+        return ProcessState.valueOf(_statesCache.get(_pid.toString()));
     }
 
     void setState(ProcessState state) {
-        _statesCache.put(_pid, state);
+        _statesCache.put(_pid.toString(), state.toString());
     }
 
     public List<String> getMexInterceptors(QName processId) {

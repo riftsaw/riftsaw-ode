@@ -98,7 +98,7 @@ public class ProcessStoreImpl implements ProcessStore {
 
     private Map<QName, ProcessConfImpl> _processes = new ConcurrentHashMap<QName, ProcessConfImpl>();
     
-    private Cache<QName, ProcessState> _processStates;
+    private Cache<String, String> _processStates;
 
     protected Map<String, DeploymentUnitDir> _deploymentUnits = new ConcurrentHashMap<String, DeploymentUnitDir>();
 
@@ -248,7 +248,7 @@ public class ProcessStoreImpl implements ProcessStore {
                 }
                 
                 ProcessState state = calcInitialState(processDD);
-                _processStates.put(pid, state);
+                _processStates.put(pid.toString(), state.toString());
                 ProcessConfImpl pconf = new ProcessConfImpl(pid, processDD.getName(), version, du, processDD, deployDate,
                         calcInitialProperties(du.getProperties(), processDD), _processStates, _eprContext, _configDir, generateProcessEventsAll);
                 processes.add(pconf);
@@ -800,7 +800,7 @@ public class ProcessStoreImpl implements ProcessStore {
                 Map<QName, Node> props = calcInitialProperties(dud.getProperties(), pinfo);
                 // TODO: update the props based on the values in the DB.
                 
-                _processStates.put(p.getPID(), p.getState());
+                _processStates.put(p.getPID().toString(), p.getState().toString());
                 
                 ProcessConfImpl pconf = new ProcessConfImpl(p.getPID(), p.getType(), p.getVersion(), dud, pinfo, dudao
                         .getDeployDate(), props, _processStates, _eprContext, _configDir, generateProcessEventsAll);
