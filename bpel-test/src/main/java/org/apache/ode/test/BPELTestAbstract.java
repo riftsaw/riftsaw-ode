@@ -175,7 +175,7 @@ public abstract class BPELTestAbstract {
         _scf = _db.createDaoStoreCF();
         
         _cp = CacheProviderFactory.getCacheProvider(odeProps);
-        _cp.start();
+        _cp.start(null);
         
         store = new ProcessStoreImpl(eprContext, _txm, _scf, _cp);
         store.registerListener(new ProcessStoreListener() {

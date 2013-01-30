@@ -118,7 +118,7 @@ class MockBpelServer {
         OdeConfigProperties odeProps = new OdeConfigProperties(props,"");
         
 		_cacheProvider = CacheProviderFactory.getCacheProvider(odeProps);
-		_cacheProvider.start();
+		_cacheProvider.start(null);
 	}
 
 	public Collection<QName> deploy(File deploymentUnitDirectory) {

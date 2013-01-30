@@ -59,7 +59,7 @@ public class ProcessStoreTest extends TestCase {
         _db.start();
         _cf = _db.createDaoStoreCF();
         _cp = CacheProviderFactory.getCacheProvider(odeProps) ;
-        _cp.start();
+        _cp.start(null);
         _ps = new ProcessStoreImpl(null,txm,  _cf, _cp);
         _ps.loadAll();
         URI tdd = getClass().getResource("/testdd/deploy.xml").toURI();
