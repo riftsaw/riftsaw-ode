@@ -18,6 +18,8 @@
  */
 package org.apache.ode.il.cache;
 
+import java.util.Properties;
+
 import org.apache.ode.bpel.iapi.Cache;
 import org.apache.ode.bpel.iapi.CacheProvider;
 
@@ -28,7 +30,7 @@ import org.apache.ode.bpel.iapi.CacheProvider;
  */
 public class DefaultCacheProvider implements CacheProvider{
 	
-	public void start() throws Exception {
+	public void start(Properties properties) throws Exception {
 		
 	}
 	

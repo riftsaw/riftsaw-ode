@@ -18,6 +18,8 @@
  */
 package org.apache.ode.bpel.iapi;
 
+import java.util.Properties;
+
 /**
  * 
  * @author jeffyu
@@ -25,7 +27,7 @@ package org.apache.ode.bpel.iapi;
  */
 public interface CacheProvider{
 	
-	public void start() throws Exception;
+	public void start(Properties properties) throws Exception;
 	
 	public <K, V> Cache<K, V> createCache();
 	

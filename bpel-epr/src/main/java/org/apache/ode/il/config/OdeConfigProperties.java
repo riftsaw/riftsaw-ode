@@ -115,6 +115,12 @@ public class OdeConfigProperties {
     public static final String DEFAULT_TX_FACTORY_CLASS_NAME = "org.apache.ode.il.EmbeddedGeronimoFactory";
 
 	public static final String DEFAULT_CACHE_PROVIDER = "org.apache.ode.il.cache.DefaultCacheProvider";
+	
+	public static final String RIFTSAW_NODE_NAME = "riftsaw.node.name";
+	
+	public static final String CACHE_NAME_PROPERTY = "cache-name";
+	
+	public static final String CACHE_CONTAINER_ROOT = "java:jboss/infinispan/container/";
 
     private File _cfgFile;
 
