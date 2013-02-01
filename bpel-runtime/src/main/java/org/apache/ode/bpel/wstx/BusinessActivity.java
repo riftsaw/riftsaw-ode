@@ -7,6 +7,7 @@ import org.apache.ode.bpel.iapi.Message;
 import org.oasis_open.docs.ws_tx.wscoor._2006._06.CoordinationContextType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.arjuna.mw.wst.TxContext;
@@ -61,7 +62,7 @@ public class BusinessActivity implements WebServiceTransaction {
                 NodeList cc = req._dao.getHeader().getElementsByTagNameNS(CoordinationConstants.WSCOOR_NAMESPACE, 
                         CoordinationConstants.WSCOOR_ELEMENT_COORDINATION_CONTEXT);
                 if (cc.getLength() > 0){
-                    CoordinationContextType cct = CoordinationContextHelper.deserialise((Element)cc.item(0));
+                    CoordinationContextType cct = CoordinationContextHelper.deserialise((Element)cc.item(0).getFirstChild());
                     if (cct != null) {
                         TxContext ctx = new TxContextImple(cct);
                         BusinessActivityManager.getBusinessActivityManager().resume(ctx);
@@ -165,6 +166,13 @@ public class BusinessActivity implements WebServiceTransaction {
                     CoordinationConstants.WSCOOR_ELEMENT_COORDINATION_CONTEXT);
             headerElement.appendChild(coord);
             CoordinationContextHelper.serialise(ctx, headerElement);
+            
+            Element parent = doc.createElementNS(CoordinationConstants.WSCOOR_NAMESPACE,
+                    CoordinationConstants.WSCOOR_ELEMENT_COORDINATION_CONTEXT);
+            Node tmp = headerElement.getElementsByTagNameNS(CoordinationConstants.WSCOOR_NAMESPACE, CoordinationConstants.WSCOOR_ELEMENT_COORDINATION_CONTEXT).item(0);
+            parent.appendChild(tmp.cloneNode(true));
+            
+            headerElement.replaceChild(parent, tmp);
         } catch (Exception e) {
             e.printStackTrace();
             throw new SystemException("Coordination context has not been added to the header.");

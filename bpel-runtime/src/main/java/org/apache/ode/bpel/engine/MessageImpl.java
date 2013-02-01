@@ -71,20 +71,15 @@ public class MessageImpl implements Message {
     }
 
     public void setHeaderPart(String name, Element content) {
-        Element header =  _dao.getHeader();
+        Element header = _dao.getHeader();
         if (header == null) {
             Document doc = DOMUtils.newDocument();
             header = doc.createElement("header");
             doc.appendChild(header);
         }
-        Element parent;
-        if (name == null) {
-            parent = header;
-        } else {
-            parent = header.getOwnerDocument().createElement(name);
-            header.appendChild(parent);
-        }
-        parent.appendChild(header.getOwnerDocument().importNode(content, true));
+        Element part = header.getOwnerDocument().createElement(name);
+        header.appendChild(part);
+        part.appendChild(header.getOwnerDocument().importNode(content, true));
         _dao.setHeader(header);
     }
 
