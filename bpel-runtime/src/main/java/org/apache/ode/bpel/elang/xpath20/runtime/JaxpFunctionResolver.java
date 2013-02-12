@@ -19,6 +19,7 @@
 
 package org.apache.ode.bpel.elang.xpath20.runtime;
 
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -71,6 +72,8 @@ import org.w3c.dom.Text;
  * @author mriou <mriou at apache dot org>
  */
 public class JaxpFunctionResolver implements XPathFunctionResolver {
+
+    private static final String JAVA_PREFIX = "java:";
 
     private static final Log __log = LogFactory.getLog(JaxpFunctionResolver.class);
 
@@ -141,6 +144,8 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             } else if (Constants.NON_STDRD_FUNCTION_YEAR_MONTH_DURATION.equals(localName)) {
                 return new YearMonthDuration();
             }
+        } else if (functionName.getNamespaceURI().startsWith(JAVA_PREFIX)) {
+            return (new JavaFunction(functionName));
         }
 
         return null;
@@ -1247,6 +1252,68 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             }
             return YearMonthDurationValue.makeYearMonthDurationValue(argument);
     	}
+    }
+    
+    public class JavaFunction implements XPathFunction {
+        
+        private java.lang.reflect.Method _method=null;
+        
+        public JavaFunction(QName functionName) {
+            String javaClassName=functionName.getNamespaceURI().substring(JAVA_PREFIX.length());
+            
+            try {
+                Class<?> cls=Class.forName(javaClassName);
+                
+                for (java.lang.reflect.Method m : cls.getMethods()) {
+                    if (m.getName().equals(functionName.getLocalPart())) {
+                        _method = m;
+                        break;
+                    }
+                }
+                
+                if (_method != null && (_method.getModifiers() & Modifier.STATIC) == 0) {
+                    __log.error("Java method implementing XPath function '"+functionName+"' is not static");
+                    _method = null;
+                }
+            } catch (Exception e) {
+                __log.error("Unable to locate XPath function '"+functionName+"'", e);
+            }
+        }
+        
+        public Object evaluate(List args) throws XPathFunctionException {
+            Object ret=null;
+            
+            if (_method == null) {
+                return null;
+            }
+            
+            // Check number of parameters is the same
+            if (args.size() != _method.getParameterTypes().length) {
+                __log.error("Incompatible number of parameters, function takes "+
+                            _method.getParameterTypes().length+" but was called with "+
+                            args.size());
+                return null;
+            }
+            
+            try {
+                // Invoke method
+                ret = _method.invoke(null, args.toArray());
+                
+                if (ret != null) {
+                    
+                    if (!(ret instanceof Node) && !(ret instanceof NodeList)) {
+                        ret = new net.sf.saxon.value.StringValue(ret.toString());
+                    }
+                }
+                
+            } catch (Exception e) {
+                throw new XPathFunctionException(
+                        new FaultException(_oxpath.getOwner().constants.qnSubLanguageExecutionFault,
+                                "Failed to execute Java xpath function", e));
+            }
+            
+            return (ret);
+        }
     }
     
     public static class Helper {

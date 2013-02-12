@@ -51,6 +51,8 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
     private NSContext _nsContext;
     private String _bpelNS;
 
+    private static final String JAVA_PREFIX = "java:";
+
     public JaxpFunctionResolver(CompilerContext cctx, OXPath20ExpressionBPEL20 out,
                                 NSContext nsContext, String bpelNS) {
         _cctx = cctx;
@@ -110,6 +112,8 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             } else if (Constants.NON_STDRD_FUNCTION_YEAR_MONTH_DURATION.equals(localName)) {
                 return new YearMonthDuration();
             }
+        } else if (functionName.getNamespaceURI().startsWith(JAVA_PREFIX)) {
+            return new JavaFunction();
         }
 
         return null;
@@ -293,6 +297,22 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             }
             return "";
     	}
+    }
+
+    public class JavaFunction implements XPathFunction {
+        public Object evaluate(List params) throws XPathFunctionException {
+            
+            for (Object param : params) {
+                if (param instanceof String) {
+                    String varName = (String)param;
+                    
+                    OScope.Variable v = _cctx.resolveVariable(varName);
+                    _out.vars.put(varName, v);
+                }
+    
+            }
+            return "";
+       }
     }
 
 }
