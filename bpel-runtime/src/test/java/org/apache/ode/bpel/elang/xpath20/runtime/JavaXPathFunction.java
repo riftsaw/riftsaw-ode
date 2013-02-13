@@ -17,9 +17,15 @@
  */
 package org.apache.ode.bpel.elang.xpath20.runtime;
 
+import javax.xml.namespace.QName;
+
 public class JavaXPathFunction {
 
     public static Object method1(Object arg1) {
         return (arg1);
+    }
+    
+    public static Object method2(QName processName, Object arg1) {
+        return(processName.toString()+":"+arg1);
     }
 }

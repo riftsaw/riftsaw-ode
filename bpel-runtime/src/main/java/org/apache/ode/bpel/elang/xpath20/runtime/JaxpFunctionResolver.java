@@ -1289,10 +1289,22 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             
             // Check number of parameters is the same
             if (args.size() != _method.getParameterTypes().length) {
-                __log.error("Incompatible number of parameters, function takes "+
-                            _method.getParameterTypes().length+" but was called with "+
-                            args.size());
-                return null;
+                
+                // Check whether length difference is based on one context parameter
+                // i.e. the process name.
+                if (_method.getParameterTypes().length >= 1
+                        && _method.getParameterTypes().length == args.size()+1
+                        && _method.getParameterTypes()[0] == QName.class) {
+                    args = new java.util.Vector(args);
+                    
+                    args.add(0, _ectx.getProcessQName());
+                    
+                } else {
+                    __log.error("Incompatible number of parameters, function takes "+
+                                _method.getParameterTypes().length+" but was called with "+
+                                args.size());
+                    return null;
+                }
             }
             
             try {
