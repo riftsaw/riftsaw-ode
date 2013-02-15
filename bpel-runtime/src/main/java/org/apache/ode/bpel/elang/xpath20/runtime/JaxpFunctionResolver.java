@@ -1292,7 +1292,7 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
                 
                 // Check whether length difference is based on one context parameter
                 // i.e. the process name.
-                if (_method.getParameterTypes().length >= 1
+                if (_method.getParameterTypes().length > 0
                         && _method.getParameterTypes().length == args.size()+1
                         && _method.getParameterTypes()[0] == QName.class) {
                     args = new java.util.Vector(args);
@@ -1305,6 +1305,14 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
                                 args.size());
                     return null;
                 }
+            } else if (_method.getParameterTypes().length > 0
+                    && _method.getParameterTypes()[0] == QName.class) {
+                // First parameter is supposed to be an implicit process name property,
+                // so actually parameter number does not match
+                __log.error("Incompatible number of parameters, function takes "+
+                        _method.getParameterTypes().length+" but was called with "+
+                        args.size());
+                return null;
             }
             
             try {

@@ -19,6 +19,7 @@
 
 package org.apache.ode.bpel.elang.xpath20.compiler;
 
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -26,6 +27,8 @@ import javax.xml.xpath.XPathFunction;
 import javax.xml.xpath.XPathFunctionException;
 import javax.xml.xpath.XPathFunctionResolver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.compiler.api.CompilationException;
 import org.apache.ode.bpel.compiler.api.CompilerContext;
 import org.apache.ode.bpel.elang.xpath10.compiler.XPathMessages;
@@ -52,6 +55,9 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
     private String _bpelNS;
 
     private static final String JAVA_PREFIX = "java:";
+    
+    private static final Log __log = LogFactory.getLog(JaxpFunctionResolver.class);
+
 
     public JaxpFunctionResolver(CompilerContext cctx, OXPath20ExpressionBPEL20 out,
                                 NSContext nsContext, String bpelNS) {
@@ -113,7 +119,7 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
                 return new YearMonthDuration();
             }
         } else if (functionName.getNamespaceURI().startsWith(JAVA_PREFIX)) {
-            return new JavaFunction();
+            return new JavaFunction(functionName);
         }
 
         return null;
@@ -300,17 +306,57 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
     }
 
     public class JavaFunction implements XPathFunction {
+        
+        private java.lang.reflect.Method _method=null;
+        private QName   _functionName=null;
+        
+        public JavaFunction(QName functionName) {
+            _functionName = functionName;
+            
+            String javaClassName=functionName.getNamespaceURI().substring(JAVA_PREFIX.length());
+            
+            try {
+                Class<?> cls=Class.forName(javaClassName);
+                
+                for (java.lang.reflect.Method m : cls.getMethods()) {
+                    if (m.getName().equals(functionName.getLocalPart())) {
+                        _method = m;
+                        break;
+                    }
+                }
+                
+                if (_method != null && (_method.getModifiers() & Modifier.STATIC) == 0) {
+                    __log.error("Java method implementing XPath function '"+functionName+"' is not static");
+                    _method = null;
+                }
+            } catch (Exception e) {
+                __log.error("Unable to locate XPath function '"+functionName+"'", e);
+            }
+        }
+
         public Object evaluate(List params) throws XPathFunctionException {
             
-            for (Object param : params) {
-                if (param instanceof String) {
-                    String varName = (String)param;
-                    
-                    OScope.Variable v = _cctx.resolveVariable(varName);
-                    _out.vars.put(varName, v);
-                }
-    
+            if (_method == null) {
+                throw new CompilationException(__msgs.errUnknownBpelFunction(_functionName.toString()));
             }
+            
+            // Check number of parameters is the same
+            if (params.size() != _method.getParameterTypes().length) {
+                
+                // Check whether length difference is based on one context parameter
+                // i.e. the process name.
+                if (!(_method.getParameterTypes().length > 0
+                        && _method.getParameterTypes().length == params.size()+1
+                        && _method.getParameterTypes()[0] == QName.class)) {
+                    throw new CompilationException(__msgs.errInvalidNumberOfArguments(_functionName.toString()));
+                }
+            } else if (_method.getParameterTypes().length > 0
+                    && _method.getParameterTypes()[0] == QName.class) {
+                // First parameter is supposed to be an implicit process name property,
+                // so actually parameter number does not match
+                throw new CompilationException(__msgs.errInvalidNumberOfArguments(_functionName.toString()));
+            }
+
             return "";
        }
     }
