@@ -27,7 +27,7 @@ import java.util.Date;
 /**
  * Base interface for all bpel events.
  */
-public abstract class BpelEvent implements Serializable {
+public abstract class BpelEvent extends java.util.EventObject {
 
     public enum TYPE {
         dataHandling, activityLifecycle, scopeHandling, instanceLifecycle, correlation;
@@ -41,6 +41,16 @@ public abstract class BpelEvent implements Serializable {
     private Date _timestamp = new Date();
 
     private int _lineNo = -1;
+    
+    private static final String SOURCE_PLACEHOLDER="BPELProcess";
+    
+    public BpelEvent() {
+        super(SOURCE_PLACEHOLDER);
+    }
+    
+    protected void setSource(Object source) {
+        this.source = source;
+    }
 
     public int getLineNo() {
         return _lineNo;

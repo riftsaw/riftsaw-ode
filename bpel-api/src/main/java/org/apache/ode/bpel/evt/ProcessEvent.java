@@ -34,6 +34,8 @@ public abstract class ProcessEvent extends BpelEvent {
 
   public void setProcessId(QName processId) {
     _processId = processId;
+    
+    setSource(processId);
   }
 
   public QName getProcessId() {
