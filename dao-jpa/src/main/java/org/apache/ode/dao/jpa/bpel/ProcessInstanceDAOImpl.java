@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.common.ProcessState;
 import org.apache.ode.bpel.evt.ProcessInstanceEvent;
+import org.apache.ode.bpel.iapi.MessageExchange;
 import org.apache.ode.bpel.iapi.ProcessConf.CLEANUP_CATEGORY;
 import org.apache.ode.dao.bpel.ActivityRecoveryDAO;
 import org.apache.ode.dao.bpel.BpelDAOConnection;
@@ -172,7 +173,8 @@ public class ProcessInstanceDAOImpl extends BpelDAO implements ProcessInstanceDA
     }
 
     public void delete(Set<CLEANUP_CATEGORY> cleanupCategories, boolean deleteMyRoleMex) {
-        if(__log.isDebugEnabled()) __log.debug("Cleaning up instance Data with " + cleanupCategories);
+        if(__log.isDebugEnabled()) __log.debug("Cleaning up instance Data with " + cleanupCategories +
+                                " deleteMyRoleMex="+deleteMyRoleMex);
         
         // remove jacob state
         setExecutionState(null);
@@ -199,6 +201,12 @@ public class ProcessInstanceDAOImpl extends BpelDAO implements ProcessInstanceDA
             }
             if (cleanupCategories.contains(CLEANUP_CATEGORY.INSTANCE)) {
                 deleteInstance();
+            }
+            
+            if (deleteMyRoleMex) {
+                for (MessageExchangeDAO mex : _messageExchanges) {
+                    mex.release(true);
+                }
             }
 
             getEM().flush();
