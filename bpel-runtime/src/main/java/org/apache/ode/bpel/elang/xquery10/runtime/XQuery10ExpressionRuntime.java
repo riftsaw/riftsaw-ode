@@ -48,7 +48,7 @@ import javax.xml.xquery.XQStaticContext;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Item;
 import net.sf.saxon.om.Validation;
-import net.sf.saxon.trans.DynamicError;
+//import net.sf.saxon.trans.DynamicError;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.DurationValue;
 import net.sf.saxon.value.Value;
@@ -341,7 +341,7 @@ public class XQuery10ExpressionRuntime implements ExpressionLanguageRuntime {
             XQConnection xqconn = xqds.getConnection();
 
             Configuration configuration = ((SaxonXQConnection) xqconn).getConfiguration();
-            configuration.setAllNodesUntyped(true);
+            //configuration.setAllNodesUntyped(true);
             configuration.setHostLanguage(Configuration.XQUERY);
 
             XQStaticContext staticEnv = xqconn.getStaticContext();
@@ -451,6 +451,7 @@ public class XQuery10ExpressionRuntime implements ExpressionLanguageRuntime {
             // Extracting the real cause from all this wrapping isn't a simple task
             Throwable cause = (xqe.getCause() != null) ? xqe.getCause() : xqe;
 
+            /*
             if (cause instanceof DynamicError) {
                 Throwable th = ((DynamicError) cause).getException();
 
@@ -462,6 +463,7 @@ public class XQuery10ExpressionRuntime implements ExpressionLanguageRuntime {
                     }
                 }
             }
+            */
 
             throw new EvaluationException(
                 "Error while executing an XQuery expression: " + cause.toString(), cause);

@@ -70,22 +70,7 @@
     </dependency>
      <dependency>
           <groupId>net.sourceforge.saxon</groupId>
-          <artifactId>saxon</artifactId>
-     </dependency>
-     <dependency>
-          <groupId>net.sourceforge.saxon</groupId>
-          <artifactId>saxon</artifactId>
-          <classifier>xpath</classifier>
-     </dependency>
-     <dependency>
-          <groupId>net.sourceforge.saxon</groupId>
-          <artifactId>saxon</artifactId>
-          <classifier>dom</classifier>
-     </dependency>
-     <dependency>
-          <groupId>net.sourceforge.saxon</groupId>
-          <artifactId>saxon</artifactId>
-          <classifier>xqj</classifier>
+          <artifactId>saxonhe</artifactId>
      </dependency>
     <dependency>
         <groupId>commons-lang</groupId>

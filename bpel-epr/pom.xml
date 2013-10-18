@@ -62,19 +62,21 @@
       <artifactId>geronimo-transaction</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jencks</groupId>
-      <artifactId>jencks</artifactId>
-      <version>${jencks.version}</version>
-      <classifier>all</classifier>
+      <groupId>tranql</groupId>
+      <artifactId>tranql-connector</artifactId>
       <exclusions>
-          <exclusion>
-              <groupId>org.springframework</groupId>
-              <artifactId>spring-aop</artifactId>
-          </exclusion>
-          <exclusion>
-              <groupId>org.springframework</groupId>
-              <artifactId>spring-jms</artifactId>
-          </exclusion>
+        <exclusion>
+          <groupId>geronimo-spec</groupId>
+          <artifactId>geronimo-spec-jta</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>geronimo-spec</groupId>
+          <artifactId>geronimo-spec-j2ee-connector</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-primitives</groupId>
+          <artifactId>commons-primitives</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>

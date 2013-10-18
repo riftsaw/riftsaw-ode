@@ -167,7 +167,7 @@ public class XQuery10ExpressionCompilerImpl implements ExpressionCompiler {
             
             __log.debug("Compiling expression " + xqueryStr);
             Configuration configuration = ((SaxonXQConnection) xqconn).getConfiguration();
-            configuration.setAllNodesUntyped(true);
+            //configuration.setAllNodesUntyped(true);
             configuration.setHostLanguage(Configuration.XQUERY);
 
             XQStaticContext staticContext = xqconn.getStaticContext();
