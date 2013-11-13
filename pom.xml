@@ -11,9 +11,9 @@
     <version>3.2.0-SNAPSHOT</version>
 
     <parent>
-        <groupId>org.jboss</groupId>
-        <artifactId>jboss-parent</artifactId>
-        <version>10</version>
+        <groupId>org.jboss.integration-platform</groupId>
+        <artifactId>jboss-integration-platform-parent</artifactId>
+        <version>6.0.0.CR3</version>
     </parent>
 
     <url>http://ode.apache.org</url>
@@ -84,7 +84,6 @@
   </developers>
 
     <properties>
-	<jboss-integration-platform.version>6.0.0-SNAPSHOT</jboss-integration-platform.version>
 	<activity.monitor.model.version>1.2.1.Final</activity.monitor.model.version>
 
         <geronimo.version>2.0.1</geronimo.version>
@@ -210,7 +209,7 @@
 	    <dependency>
 		<groupId>org.jboss.integration-platform</groupId>
 		<artifactId>jboss-integration-platform-bom</artifactId>
-		<version>${jboss-integration-platform.version}</version>
+		<version>6.0.0.CR3</version>
 		<type>pom</type>
 		<scope>import</scope>
 	    </dependency>
