@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.jboss.integration-platform</groupId>
         <artifactId>jboss-integration-platform-parent</artifactId>
-        <version>6.0.0.CR3</version>
+        <version>6.0.0.CR8</version>
     </parent>
 
     <url>http://ode.apache.org</url>
@@ -84,11 +84,12 @@
   </developers>
 
     <properties>
-	<activity.monitor.model.version>1.2.1.Final</activity.monitor.model.version>
+    	<activity.monitor.model.version>1.2.1.Final</activity.monitor.model.version>
 
         <geronimo.version>2.0.1</geronimo.version>
         <geronimo.specs.jta.version>1.1</geronimo.specs.jta.version>
-	<jmock.version>1.2.0</jmock.version>
+	    <jmock.version>1.2.0</jmock.version>
+        <commons.beanutils.version>1.8.2</commons.beanutils.version>
 
 	<!-- Leaving this version local, as upgrading the version would cause problems -->
         <xmlbeans.version>2.2.0</xmlbeans.version>
@@ -207,7 +208,7 @@
 	    <dependency>
 		<groupId>org.jboss.integration-platform</groupId>
 		<artifactId>jboss-integration-platform-bom</artifactId>
-		<version>6.0.0.CR3</version>
+		<version>6.0.0.CR8</version>
 		<type>pom</type>
 		<scope>import</scope>
 	    </dependency>
@@ -302,6 +303,13 @@
                 <artifactId>riftsaw-bpel-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+               <groupId>org.jboss.bpm</groupId>
+               <artifactId>activity-monitor-model</artifactId>
+               <version>${activity.monitor.model.version}</version>
+            </dependency>
+
             <!-- 3rd party libraries -->
             <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
@@ -317,6 +325,12 @@
                 <groupId>org.apache.geronimo.components</groupId>
                 <artifactId>geronimo-transaction</artifactId>
                 <version>${geronimo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons.beanutils.version}</version>
             </dependency>
 
             <dependency>

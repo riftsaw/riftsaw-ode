@@ -48,9 +48,8 @@
       <artifactId>riftsaw-bpel-dao</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.common</groupId>
       <artifactId>hibernate-commons-annotations</artifactId>
-      <version>3.2.0.Final</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -63,7 +62,6 @@
     <dependency>
        <groupId>org.jboss.bpm</groupId>
        <artifactId>activity-monitor-model</artifactId>
-       <version>${activity.monitor.model.version}</version>
 	   <exclusions>
 		  <exclusion>
 			<groupId>org.hibernate</groupId>
