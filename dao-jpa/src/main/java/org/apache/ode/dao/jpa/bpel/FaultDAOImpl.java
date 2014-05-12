@@ -49,7 +49,7 @@ public class FaultDAOImpl implements FaultDAO {
 	private Long _id;
 	@Basic @Column(name="NAME")
     private String _name;
-	@Basic @Column(name="MESSAGE", length=102400)
+	@Lob @Column(name="MESSAGE", length=102400)
     private String _explanation;
 	@Lob @Column(name="DATA")
     private String _data;
