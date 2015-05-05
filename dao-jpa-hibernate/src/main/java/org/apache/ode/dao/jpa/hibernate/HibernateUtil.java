@@ -36,7 +36,7 @@ import org.apache.ode.dao.jpa.JpaConnection;
 import org.apache.ode.il.config.OdeConfigProperties;
 import org.apache.ode.utils.GUID;
 import org.hibernate.cfg.Environment;
-import org.hibernate.ejb.EntityManagerImpl;
+import org.hibernate.jpa.internal.EntityManagerImpl;
 
 /**
  * Manages datasource and transaction, for hibernate usage.
@@ -143,6 +143,9 @@ public class HibernateUtil {
      * For some reason Hibernate does not mark an EntityManager as being closed when
      * the EntityManagerFactory that created it is closed. This method performs a
      * deep introspection to determine if the EntityManager is still viable.
+     * 
+     * Update to 4.3 - not sure this is needed anymore, it looks like EntityManagerImpl.isOpen
+     * checks the EntityManagerFactory.
      */
     public static boolean isOpen(JpaConnection conn) {
         EntityManager mgr = conn.getEntityManager();
@@ -150,7 +153,7 @@ public class HibernateUtil {
             return false;
         } else if (mgr instanceof EntityManagerImpl) {
             EntityManagerImpl mgrImpl = (EntityManagerImpl) mgr;
-            return !mgrImpl.getSession().getSessionFactory().isClosed();
+            return mgrImpl.isOpen();
         } else {
             return !conn.isClosed();
         }

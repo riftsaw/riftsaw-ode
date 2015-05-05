@@ -27,7 +27,7 @@ import java.util.Properties;
 import org.apache.ode.utils.DbIsolation;
 import org.hibernate.HibernateException;
 import org.hibernate.service.UnknownUnwrapTypeException;
-import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.service.spi.Configurable;
 import org.hibernate.service.spi.Stoppable;
 

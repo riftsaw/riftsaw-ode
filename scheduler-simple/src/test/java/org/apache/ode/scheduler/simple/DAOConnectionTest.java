@@ -107,7 +107,7 @@ public class DAOConnectionTest extends SchedulerTestBase {
     }
 
     public void testScheduleImmediateTimeFilter() throws Exception {
-        SchedulerDAOConnection conn = _factory.getConnection();
+    	SchedulerDAOConnection conn = _factory.getConnection();
         try{
         	_txm.begin();
 	        conn.insertJob(conn.createJob("j1", true, new Scheduler.JobDetails(), true, 100L), "n1", false);
