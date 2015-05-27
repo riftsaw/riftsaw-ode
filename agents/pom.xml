@@ -28,6 +28,6 @@
   <parent>
     <groupId>org.jboss.soa.bpel</groupId>
     <artifactId>ode</artifactId>
-    <version>3.2.2.Final</version>
+    <version>3.2.3.Final</version>
   </parent>
 </project>

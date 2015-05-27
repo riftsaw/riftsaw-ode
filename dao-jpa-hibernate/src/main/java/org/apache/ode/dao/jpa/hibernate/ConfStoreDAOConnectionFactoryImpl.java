@@ -23,7 +23,6 @@ import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -34,11 +33,12 @@ import org.apache.ode.dao.jpa.store.ConfStoreDAOConnectionImpl;
 import org.apache.ode.dao.store.ConfStoreDAOConnection;
 import org.apache.ode.dao.store.ConfStoreDAOConnectionFactory;
 import org.apache.ode.il.config.OdeConfigProperties;
+import org.hibernate.ejb.HibernatePersistence;
 /**
 
  */
 public class ConfStoreDAOConnectionFactoryImpl implements ConfStoreDAOConnectionFactory {
-  
+
   static final Log __log = LogFactory.getLog(ConfStoreDAOConnectionFactoryImpl.class);
   EntityManagerFactory _emf;
   TransactionManager _txm;
@@ -46,17 +46,22 @@ public class ConfStoreDAOConnectionFactoryImpl implements ConfStoreDAOConnection
   JpaOperator _operator = new JpaOperatorImpl();
 
 
-  public void init(Properties odeConfig,TransactionManager txm, Object env) {
+  @Override
+public void init(Properties odeConfig,TransactionManager txm, Object env) {
     this._txm = txm;
     this._ds = (DataSource) env;
     Map emfProperties = HibernateUtil.buildConfig(OdeConfigProperties.PROP_DAOCF_STORE + ".", odeConfig, _txm, _ds);
-    _emf = Persistence.createEntityManagerFactory("ode-store", emfProperties);
+        HibernatePersistence p = new HibernatePersistence();
+
+        _emf = p.createEntityManagerFactory("ode-store", emfProperties);
+
   }
 
-  public ConfStoreDAOConnection getConnection() {
+  @Override
+public ConfStoreDAOConnection getConnection() {
     final ThreadLocal<ConfStoreDAOConnectionImpl> currentConnection = ConfStoreDAOConnectionImpl.getThreadLocal();
 
-    ConfStoreDAOConnectionImpl conn = (ConfStoreDAOConnectionImpl)currentConnection.get();
+    ConfStoreDAOConnectionImpl conn = currentConnection.get();
     if (conn != null && HibernateUtil.isOpen(conn)) {
       return conn;
     } else {
@@ -67,7 +72,8 @@ public class ConfStoreDAOConnectionFactoryImpl implements ConfStoreDAOConnection
     }
   }
 
-   public void shutdown() {
+   @Override
+public void shutdown() {
     _emf.close();
   }
 }

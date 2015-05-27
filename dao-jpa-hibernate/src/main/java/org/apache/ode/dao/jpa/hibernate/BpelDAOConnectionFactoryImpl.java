@@ -23,7 +23,6 @@ import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -34,6 +33,7 @@ import org.apache.ode.dao.bpel.BpelDAOConnectionFactory;
 import org.apache.ode.dao.jpa.JpaOperator;
 import org.apache.ode.dao.jpa.bpel.BpelDAOConnectionImpl;
 import org.apache.ode.il.config.OdeConfigProperties;
+import org.hibernate.ejb.HibernatePersistence;
 
 /**
 
@@ -46,21 +46,26 @@ public class BpelDAOConnectionFactoryImpl implements BpelDAOConnectionFactory {
     TransactionManager _txm;
     DataSource _ds;
 
+    @Override
+    @SuppressWarnings("deprecation")
     public void init(Properties odeConfig, TransactionManager txm, Object env) {
         this._txm = txm;
         this._ds = (DataSource) env;
         Map emfProperties = HibernateUtil.buildConfig(OdeConfigProperties.PROP_DAOCF + ".", odeConfig, _txm, _ds);
-        _emf = Persistence.createEntityManagerFactory("ode-bpel", emfProperties);
-        
+        HibernatePersistence p = new HibernatePersistence();
+
+        _emf = p.createEntityManagerFactory("ode-bpel", emfProperties);
+
         // dirty hack
         odeConfig.put("ode.emf", _emf);
 
     }
 
+    @Override
     public BpelDAOConnection getConnection() {
         final ThreadLocal<BpelDAOConnectionImpl> currentConnection = BpelDAOConnectionImpl.getThreadLocal();
 
-        BpelDAOConnectionImpl conn = (BpelDAOConnectionImpl) currentConnection.get();
+        BpelDAOConnectionImpl conn = currentConnection.get();
         if (conn != null && HibernateUtil.isOpen(conn)) {
             return conn;
         } else {
@@ -71,6 +76,7 @@ public class BpelDAOConnectionFactoryImpl implements BpelDAOConnectionFactory {
         }
     }
 
+    @Override
     public void shutdown() {
         _emf.close();
     }
